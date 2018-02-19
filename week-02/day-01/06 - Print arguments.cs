@@ -6,11 +6,9 @@ namespace GreenFox
     {
         static void Main(string[] args)
         {
-            string a = "kacsa ";
-            string b = "ding dong knock knock";
-            printer(a + b);
+            printer("kecske", "lo", "szorny");
 
-            
+
             // - Create a function called `printer`
             //   which prints the input String parameters
             // - It can have any number of parameters
@@ -22,10 +20,12 @@ namespace GreenFox
             // ...
             Console.ReadLine();
         }
-        public static string printer(string printThisString)
+        public static void printer(params string[] printThisString)
         {
-            Console.WriteLine(printThisString);
-            return printThisString;
+            foreach (var word in printThisString)
+            {
+                Console.WriteLine(word);
+            }
         }
     }
 }
