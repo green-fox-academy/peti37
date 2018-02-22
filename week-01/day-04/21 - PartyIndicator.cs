@@ -6,56 +6,34 @@ namespace GreenFox
     {
         static void Main(string[] args)
         {
-            var map = new List<Dictionary<string, object>>();
+            Console.WriteLine("How many girls are coming?");
+            string input = Console.ReadLine();
+            Console.WriteLine("How many boys are coming?");
+            string input2 = Console.ReadLine();
+            int number;
+            int number2;
+            Int32.TryParse(input, out number);
+            Int32.TryParse(input2, out number2);
 
-            // Given this list of hashmaps...
 
-            var row0 = new Dictionary<string, object>();
-            row0.Add("name", "Rezso");
-            row0.Add("age", 9.5);
-            row0.Add("candies", 2);
-            map.Add(row0);
-
-            var row1 = new Dictionary<string, object>();
-            row1.Add("name", "Gerzson");
-            row1.Add("age", 10);
-            row1.Add("candies", 1);
-            map.Add(row1);
-
-            var row2 = new Dictionary<string, object>();
-            row2.Add("name", "Aurel");
-            row2.Add("age", 7);
-            row2.Add("candies", 3);
-            map.Add(row2);
-
-            var row3 = new Dictionary<string, object>();
-            row3.Add("name", "Zsombor");
-            row3.Add("age", 12);
-            row3.Add("candies", 5);
-            map.Add(row3);
-
-            var row4 = new Dictionary<string, object>();
-            row4.Add("name", "Olaf");
-            row4.Add("age", 12);
-            row4.Add("candies", 7);
-            map.Add(row4);
-
-            var row5 = new Dictionary<string, object>();
-            row5.Add("name", "Teodor");
-            row5.Add("age", 3);
-            row5.Add("candies", 2);
-            map.Add(row5);
-
-            // Display the following things:
-            //  - Who has got more candies than 4 candies
-            //  - Sum the age of people who have lass than 5 candies
-            for (int i = 0; i < map.Count; i++)
+            if (number == number2 && number + number2 > 20)
             {
-                // the key
-                Console.WriteLine(map[i].Key);
+                Console.WriteLine("The party is exellent!");
+            }
+            else if (number != number2 && number + number2 > 20)
+            {
+                Console.WriteLine("Quite cool party!");
+            }
+            else if (number + number2 < 20 && number != 0)
+            {
+                Console.WriteLine("Avarage party...");
+            }
+            if (number == 0)
+            {
+                Console.WriteLine("Sausage party");
             }
             Console.ReadLine();
-           
+
 
         }
     }
