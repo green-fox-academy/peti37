@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connect the dots", "Connect the dots\Connect the dots.csproj", "{7849E9D9-BDA6-4E98-916D-52A9E0BB172F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7849E9D9-BDA6-4E98-916D-52A9E0BB172F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7849E9D9-BDA6-4E98-916D-52A9E0BB172F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7849E9D9-BDA6-4E98-916D-52A9E0BB172F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7849E9D9-BDA6-4E98-916D-52A9E0BB172F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6DE72E65-18EB-424C-8FC1-E9FA002B46E2}
+	EndGlobalSection
+EndGlobal

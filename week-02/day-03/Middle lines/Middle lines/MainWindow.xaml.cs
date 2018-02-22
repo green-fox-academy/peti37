@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp5
+namespace Middle_lines
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,18 +27,14 @@ namespace WpfApp5
             TwoLines(foxDraw);
 
         }
-        public static void TwoLines(FoxDraw foxDraw)
+        public void TwoLines(FoxDraw foxDraw)
         {
-            foxDraw.StrokeColor(Colors.Blue);
-            foxDraw.DrawLine(0, 200, 400, 200);
+            foxDraw.StrokeColor(Colors.Red);
+            foxDraw.DrawLine(0, canvas.Width / 2, canvas.Height, canvas.Height/2);
 
-            foxDraw.StrokeColor(Colors.Blue);
-            foxDraw.DrawLine(50, 100, 400, 100);
+            foxDraw.StrokeColor(Colors.Green);
+            foxDraw.DrawLine(canvas.Width/2, 0, canvas.Height/2, canvas.Height);
 
-            foxDraw.StrokeColor(Colors.Blue);
-            var startPoint = new Point(200, 0);
-            var endPoint = new Point(200, 400);
-            foxDraw.DrawLine(startPoint, endPoint);
 
 
         }

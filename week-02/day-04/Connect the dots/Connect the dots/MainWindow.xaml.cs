@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp5
+namespace Connect_the_dots
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,23 +24,19 @@ namespace WpfApp5
         {
             InitializeComponent();
             var foxDraw = new FoxDraw(canvas);
-            TwoLines(foxDraw);
+            List<Point> pointsOfList = new List<Point> { new Point(10, 10), new Point(290, 10), new Point(290, 290), new Point(10, 290) };
 
+            List<Point> pointsOfList2 = new List<Point> {new Point(50, 100), new Point(70, 70), new Point(80, 90), new Point(90, 90), new Point(100, 70),
+             new Point(120, 100), new Point(85, 130), new Point(50, 100)};
+
+            ConnectPoints(foxDraw,pointsOfList2);
+           
         }
-        public static void TwoLines(FoxDraw foxDraw)
+
+        private void ConnectPoints(FoxDraw foxDraw, List<Point> inputList)
         {
             foxDraw.StrokeColor(Colors.Green);
-            foxDraw.DrawLine(0, 0, 400, 400);
-
-            foxDraw.StrokeColor(Colors.Red);
-            foxDraw.DrawLine(400, 0, 0, 400);
-
-
-           
-
-
+            foxDraw.DrawPolygon(inputList);
         }
-
     }
-
 }

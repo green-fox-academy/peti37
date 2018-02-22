@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp5
+namespace Colored_box
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,29 +24,22 @@ namespace WpfApp5
         {
             InitializeComponent();
             var foxDraw = new FoxDraw(canvas);
-            double canvasW = canvas.Width;
-            double canvasH = canvas.Height;
-            int x = 50;
-            int y = 100;
-
-            for (int i = 0; i < 3;  i = i++)
-            {
-            TwoLines(foxDraw, x+ i, y + i);
-            }
-
-
+            TwoLines(foxDraw);
 
         }
-        public static void TwoLines(FoxDraw foxDraw, int x, int y)
+        public static void TwoLines(FoxDraw foxDraw)
         {
-           
             foxDraw.StrokeColor(Colors.Green);
-            foxDraw.DrawLine(x, y, 200, 200);
+            foxDraw.DrawLine(10, 10, 290, 10);
 
+            foxDraw.StrokeColor(Colors.Blue);
+            foxDraw.DrawLine(290, 10, 290, 290);
 
+            foxDraw.StrokeColor(Colors.Red);
+            foxDraw.DrawLine(290, 290, 10, 290);
 
-
-
+            foxDraw.StrokeColor(Colors.Yellow);
+            foxDraw.DrawLine(10, 290, 10, 10);
 
         }
 
