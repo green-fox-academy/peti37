@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GreenFox
+namespace ConsoleApp4
 {
     class Program
     {
@@ -49,14 +51,24 @@ namespace GreenFox
             // Display the following things:
             //  - Who has got more candies than 4 candies
             //  - Sum the age of people who have lass than 5 candies
-            for (int i = 0; i < map.Count; i++)
+            int sumOfAges = 0;
+            Console.WriteLine("Those who have more then 4 candies:");
+            foreach (Dictionary<string, object> item in map)
             {
-                // the key
-                Console.WriteLine(map[i].Key);
-            }
-            Console.ReadLine();
-           
 
+                if (Convert.ToInt32(item["candies"]) > 4)
+                {
+                    Console.WriteLine(item["name"]);
+                }
+                if (Convert.ToInt32(item["candies"]) < 5)
+                {
+                    sumOfAges = sumOfAges + Convert.ToInt32(item["age"]);
+
+                }
+            }
+            Console.WriteLine("Sum of ages : " + sumOfAges);
+            Console.ReadLine();
+        
         }
     }
 }
