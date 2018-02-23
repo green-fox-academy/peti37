@@ -7,8 +7,8 @@ namespace GreenFox
         static void Main(string[] args)
         {
 
-            string first = "kacsa";
-            string second = "acska";
+            string first = "listen";
+            string second = "silent";
 
             Console.WriteLine(anagram(first, second)); 
 
