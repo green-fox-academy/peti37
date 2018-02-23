@@ -53,81 +53,53 @@ namespace Project___Envelope_star
 
         private void TwoLines4(FoxDraw foxDraw, int fourthWidth1, int fourthHeight1, int fourthWidth2, int fourthHeight2)
         {
-            for (int i = 0; i < canvas.Width / 10; i++)
+            for (int i = 0; i < canvas.Width /20; i++)
             {
                 foxDraw.StrokeColor(Colors.Green);
                 foxDraw.DrawLine(fourthWidth1, fourthHeight1, fourthWidth2, fourthHeight2);
 
-                if (i < canvas.Width / 20)
-                {
                     fourthHeight2 -= 10;
                     fourthWidth1 += 10;
 
-                }
             }
         }
 
         private void TwoLines3(FoxDraw foxDraw, int thirdWidth1, int thirdHeight1, int thirdWidth2, int thirdHeight2)
         {
-            for (int i = 0; i < canvas.Width / 10; i++)
+            for (int i = 0; i < canvas.Width / 20; i++)
             {
                 foxDraw.StrokeColor(Colors.Green);
                 foxDraw.DrawLine(thirdWidth1, thirdHeight1, thirdWidth2, thirdHeight2);
 
-                if (i < canvas.Width / 20)
-                {
                     thirdHeight2 -= 10;
                     thirdWidth1 -= 10;
 
-                }
             }
         }
 
         private void TwoLines2(FoxDraw foxDraw, int secondWidth1, int secondHeight1, int secondWidth2, int secondHeight2)
         {
-            for (int i = 0; i < canvas.Width / 10; i++)
+            for (int i = 0; i < canvas.Width / 20; i++)
             {
                 foxDraw.StrokeColor(Colors.Green);
                 foxDraw.DrawLine(secondWidth1, secondHeight1, secondWidth2, secondHeight2);
 
-
-                if (i < canvas.Width / 20)
-                {
                     secondHeight1 += 10;
                     secondWidth2 -= 10;
 
-                }
             }
         }
 
         private void TwoLines(FoxDraw foxDraw, int width2, int width1, int height2, int height1)
         {
-            for (int i = 0; i < canvas.Width / 10; i++)
+            for (int i = 0; i < canvas.Width / 20; i++)
             {
                 foxDraw.StrokeColor(Colors.Green);
                 foxDraw.DrawLine(width1, height1, width2, height2);
 
-
-                if (i < canvas.Width / 20)
-                {
                     height1 += 10;
                     width2 += 10;
 
-                }
-                //else if (i >= 20 && i < 40)
-                //{
-                //    y += 20;
-                //}
-                //else if (i >= 40 && i < 60)
-                //{
-                //    y = 400;
-                //    x -= 20;
-                //}
-                //else if (i > 60 && i < canvas.Width * 4 / 20)
-                //{
-                //    x = 0;
-                //    y -= 20;
-                //}
             }
 
         }
