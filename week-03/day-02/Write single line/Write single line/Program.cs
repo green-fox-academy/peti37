@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.IO;
 
-namespace Divide_by_zero
-{
+namespace Write_single_line
+{ 
     class Program
     {
         static void Main(string[] args)
         {
             string path = @"my-file.txt";
-            
+
 
             try
             {

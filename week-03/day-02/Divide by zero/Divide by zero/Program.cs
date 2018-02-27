@@ -5,34 +5,33 @@ namespace Divide_by_zero
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            string path = @"my-file.txt";
-            string pathAnotherfile = @"anotherfile.txt";
-            Console.WriteLine(FileCopier(path, pathAnotherfile)); 
+            int divisor = int.Parse(Console.ReadLine());
+            Divider(divisor);
             
-
-           
-            Console.ReadLine();
         }
-        private static bool FileCopier(string path, string path2)
+
+        private static void Divider(int divisor)
         {
-            string[] content = File.ReadAllLines(path);
-            try
+            try  
             {
-                using (StreamWriter writer = new StreamWriter(path2))
-                {
-                    for (int i = 0; i < content.Length; i++)
-                    {
-                        writer.WriteLine(content[i]);
-                    }
-                }
+                
+                int result = 10 / divisor;
+                Console.WriteLine(result);
             }
-            catch (Exception)
+            catch (DivideByZeroException e)
             {
-                return false;
+                Console.WriteLine("Fail");
             }
-            return true;
+            catch (Exception e)
+            {
+                Console.WriteLine("uuups, some serious thing happened!");
+            }
+            finally
+            {
+                Console.ReadLine();
+            }
         }
     }
 }

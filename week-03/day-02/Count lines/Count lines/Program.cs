@@ -1,29 +1,31 @@
-using System;
+﻿using System;
 using System.IO;
 
-namespace Divide_by_zero
+namespace Count_lines
 {
     class Program
     {
         static void Main(string[] args)
         {
             string path = @"my-file.txt";
-            try
-            {
-                string[] content = File.ReadAllLines(path);
-                foreach (var cont in content)
-                {
-                    Console.WriteLine(cont);
+            LineCounter(path);
 
-                }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Unable to read file: my-file.txt");
-            }
 
             Console.ReadLine();
 
+        }
+
+        private static void LineCounter(string path)
+        {
+            try
+            {
+                string[] content = File.ReadAllLines(path);
+                Console.WriteLine(content.Length);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("0");
+            }
         }
     }
 }

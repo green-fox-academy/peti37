@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.IO;
 
-namespace Divide_by_zero
+namespace Write_Multiple_Lines
 {
     class Program
     {
@@ -11,9 +11,9 @@ namespace Divide_by_zero
             string word = "apple";
             int number = 15;
             MultipleLines(path, word, number);
-            
 
-           
+
+
             Console.ReadLine();
         }
         private static void MultipleLines(string path, string word, int number)
@@ -30,7 +30,7 @@ namespace Divide_by_zero
             }
             catch (Exception)
             {
-                
+
             }
             string[] content = File.ReadAllLines(path);
             foreach (var cont in content)

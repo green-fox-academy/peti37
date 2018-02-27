@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.IO;
 
-namespace Divide_by_zero
+namespace Copy_file
 {
     class Program
     {
@@ -10,7 +10,7 @@ namespace Divide_by_zero
             string path = @"my-file.txt";
             string pathAnotherfile = @"anotherfile.txt";
 
-            Console.WriteLine(FileCopier(path, pathAnotherfile)); 
+            Console.WriteLine(FileCopier(path, pathAnotherfile));
 
             Console.ReadLine();
         }
