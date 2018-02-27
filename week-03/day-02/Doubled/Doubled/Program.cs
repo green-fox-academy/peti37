@@ -25,8 +25,10 @@ namespace Doubled
                     if (i % 2 == 0)
                     {
                         contentList.Add(item[i]);
+                        
                     }
                 }
+                contentList.Add('\n');
 
             }
 
