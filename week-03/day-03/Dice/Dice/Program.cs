@@ -48,17 +48,24 @@ namespace Dice
         {
             RandomValue = new Random();
             Dice myDice = new Dice();
+            int counter = 0;
+
+            myDice.Roll();
             for (int i = 0; i < Dices.Length; i++)
             {
                 while (myDice.GetCurrent(i) != 6)
                 {
                     myDice.Reroll(i);
+                    counter++;
                 }
             }
+
+            Console.WriteLine("Results are:");
             for (int i = 0; i < Dices.Length; i++)
             {
                 Console.WriteLine(myDice.GetCurrent(i));
             }
+            Console.WriteLine("and its dropped for the " + counter + ". times");
             Console.ReadLine();
             //myDice.GetCurrent();
             //myDice.Roll();
