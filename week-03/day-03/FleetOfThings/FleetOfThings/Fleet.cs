@@ -16,5 +16,9 @@ namespace FleetOfThings
         {
             Things.Add(thing);
         }
+        public List<Thing> List()
+        {
+            return Things;
+        }
     }
 }

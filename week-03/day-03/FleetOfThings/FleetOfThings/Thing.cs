@@ -16,5 +16,13 @@ namespace FleetOfThings
         {
             this.Completed = true;
         }
+        public string PublicName()
+        {
+            return Name;
+        }
+        public bool PublicComplete()
+        {
+            return Completed;
+        }
     }
 }
