@@ -9,6 +9,7 @@ namespace Counter
     public class Counter
     {
         public int start = 0;
+        public int number;
 
         public Counter(int value)
         {
@@ -17,6 +18,7 @@ namespace Counter
 
         public void Add(int number)
         {
+            this.number = number;
             start += number;
         }
         public void Add()
@@ -29,7 +31,7 @@ namespace Counter
         }
         public void Reset()
         {
-            start = 0;
+            start = number;
         }
     }
 
