@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{676E700C-910C-4FCC-B82B-21533CC0980F}</ProjectGuid>
+    <ProjectGuid>{99C864ED-84A8-48B2-A22B-AA0C0CDF2C3E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Dominos</RootNamespace>
-    <AssemblyName>Dominos</AssemblyName>
+    <RootNamespace>Dice</RootNamespace>
+    <AssemblyName>Dice</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domino.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
