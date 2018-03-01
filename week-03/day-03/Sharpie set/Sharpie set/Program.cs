@@ -10,8 +10,7 @@ namespace Sharpie_set
     {
         static void Main(string[] args)
         {
-            Sharpie First = new Sharpie("red", 101);
-            First.Use();
+
             var listOfSharpies = new SharpieSet();
             listOfSharpies.AddSharpie(new Sharpie("green", 50));
             listOfSharpies.AddSharpie(new Sharpie("blue", 15));
