@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharpie set", "Sharpie set\Sharpie set.csproj", "{51E5D6C8-9114-495A-B9DA-55320D76A528}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51E5D6C8-9114-495A-B9DA-55320D76A528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E5D6C8-9114-495A-B9DA-55320D76A528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51E5D6C8-9114-495A-B9DA-55320D76A528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51E5D6C8-9114-495A-B9DA-55320D76A528}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DECAB1A1-311B-4D5E-92AB-1B7E077C0668}
+	EndGlobalSection
+EndGlobal
