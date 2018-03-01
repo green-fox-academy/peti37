@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "11 Refactorio", "11 Refactorio\11 Refactorio.csproj", "{30B624EC-8012-46D2-B862-14F8A64D65D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{30B624EC-8012-46D2-B862-14F8A64D65D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30B624EC-8012-46D2-B862-14F8A64D65D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30B624EC-8012-46D2-B862-14F8A64D65D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30B624EC-8012-46D2-B862-14F8A64D65D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {537CE43D-68F7-439A-B3C3-7E0894E4CB35}
+	EndGlobalSection
+EndGlobal
