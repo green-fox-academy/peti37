@@ -11,11 +11,10 @@ namespace _11_Refactorio
         static void Main(string[] args)
         {
             int number = 5;
-            Console.WriteLine(refact(number));
+            Console.WriteLine(FactorialWithRecursion(number));
             Console.ReadLine();
-
         }
-        public static int refact(int n)
+        public static int FactorialWithRecursion(int n)
         {
             if (n == 1)
             {
@@ -23,7 +22,7 @@ namespace _11_Refactorio
             }
             else
             {
-                return n * refact(n - 1);
+                return n * FactorialWithRecursion(n - 1);
             }
         }
     }

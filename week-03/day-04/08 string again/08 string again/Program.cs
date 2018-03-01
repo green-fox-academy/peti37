@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Strings
+namespace _08_string_again
 {
     class Program
     {
@@ -12,7 +12,7 @@ namespace Strings
         {
             Console.WriteLine("Give me a word (with lowercases) with an X in it");
             string word = Console.ReadLine();
-            Console.WriteLine("I switched the X-s with Y-s: \n" + switchX(word));
+            Console.WriteLine("I deleted the x-s, muhahaha: \n" + switchX(word));
             Console.ReadLine();
 
         }
@@ -22,7 +22,7 @@ namespace Strings
             {
                 if (n == "x")
                 {
-                    return "y";
+                    return string.Empty;
                 }
                 else
                 {
@@ -33,7 +33,7 @@ namespace Strings
             {
                 if (n[0] == 'x')
                 {
-                    return n = "y" + switchX(n.Substring(1));
+                    return n = "" + switchX(n.Substring(1));
                 }
                 else
                 {
