@@ -17,6 +17,11 @@ namespace Sharpie_set
             SharpieList.Add(sharpie);
         }
 
+        public void UseSharpie(Sharpie sharpie)
+        {
+            sharpie.Use();
+        }
+
         public int CountUsable()
         {
             int numberOfUsableSharpies = 0;
@@ -28,6 +33,25 @@ namespace Sharpie_set
                 }
             }
             return numberOfUsableSharpies;
+        }
+
+        public void RemoveSharpie()
+        {
+            foreach (var sharp in SharpieList)
+            {
+                if (sharp.InkAmount == 0)
+                {
+                    SharpieList.Remove(sharp);
+                }
+            }
+        }
+
+        public void HowMany()
+        {
+            for (int i = 0; i < SharpieList.Count; i++)
+            {
+                Console.WriteLine(i);
+            }
         }
 
         

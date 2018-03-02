@@ -20,7 +20,7 @@ namespace Sharpie_set
         }
         public void Use()
         {
-            InkAmount--;
+            InkAmount-=5;
             Console.WriteLine("You used some ink, you have left " + InkAmount + " amounts of ink");
         }
 

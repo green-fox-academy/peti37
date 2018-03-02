@@ -12,9 +12,20 @@ namespace Sharpie_set
         {
 
             var listOfSharpies = new SharpieSet();
-            listOfSharpies.AddSharpie(new Sharpie("green", 50));
-            listOfSharpies.AddSharpie(new Sharpie("blue", 15));
-            listOfSharpies.AddSharpie(new Sharpie("black", 15));
+            var first = new Sharpie("red", 55);
+            var second = new Sharpie("green", 50);
+            var third = new Sharpie("blue", 15);
+            var fourth = new Sharpie("black", 15);
+            listOfSharpies.AddSharpie(first);
+            listOfSharpies.AddSharpie(second);
+            listOfSharpies.AddSharpie(third);
+            listOfSharpies.AddSharpie(fourth);
+
+
+            first.Use();
+            first.Use();
+
+            listOfSharpies.HowMany();
 
 
 
