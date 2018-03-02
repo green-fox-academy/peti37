@@ -14,6 +14,10 @@ namespace Sharpie_set
             var listOfSharpies = new SharpieSet();
             listOfSharpies.AddSharpie(new Sharpie("green", 50));
             listOfSharpies.AddSharpie(new Sharpie("blue", 15));
+            listOfSharpies.AddSharpie(new Sharpie("black", 15));
+
+
+
 
 
             Console.WriteLine(listOfSharpies.CountUsable());

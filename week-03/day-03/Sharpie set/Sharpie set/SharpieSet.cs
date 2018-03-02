@@ -8,7 +8,9 @@ namespace Sharpie_set
 {
     public class SharpieSet
     {
-        public List<Sharpie> SharpieList;
+        public List<Sharpie> SharpieList = new List<Sharpie>();
+
+
 
         public void AddSharpie(Sharpie sharpie)
         {
