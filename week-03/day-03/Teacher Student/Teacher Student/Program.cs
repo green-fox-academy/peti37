@@ -15,7 +15,8 @@ namespace Teacher_Student
 
             me.Question(teacher);
             teacher.Answer(me);
-            teacher.Punish(me);
+            
+
 
             Console.ReadLine();
         }

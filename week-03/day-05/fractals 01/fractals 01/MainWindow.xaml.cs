@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -40,7 +42,7 @@ namespace fractals_01
         }
         public void TriangleForce(FoxDraw foxDraw, int layer, Point topPoint, Point leftPoint, Point rightPoint)
         {
-
+            
             if (layer == 0)
             {
                 Point[] points = { topPoint, leftPoint, rightPoint };
@@ -59,9 +61,11 @@ namespace fractals_01
                 Point bottomMid = new Point(
                                 (leftPoint.X + rightPoint.X) / 2.0,
                                 (leftPoint.Y + rightPoint.Y) / 2.0);
+
                 TriangleForce(foxDraw, layer - 1, topPoint, leftMid, rightMid);
                 TriangleForce(foxDraw, layer - 1, leftMid, leftPoint, bottomMid);
                 TriangleForce(foxDraw, layer - 1, rightMid, bottomMid, rightPoint);
+
             }
         }
     }
