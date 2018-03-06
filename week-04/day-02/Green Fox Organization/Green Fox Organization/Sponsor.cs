@@ -13,6 +13,7 @@ namespace Green_Fox_Organization
 
         public Sponsor(string name, int age, string gender, string company, int hiredStudents = 0) : base(name, age, gender)
         {
+            this.company = company;
             this.hiredStudents = hiredStudents;
         }
 
