@@ -11,8 +11,18 @@ namespace The_Garden_Application
         static void Main(string[] args)
         {
             var myGarden = new Garden();
-            var violet = new Flower() { color = "red" };
-            var appleTree = new Tree() { color = "yellow" };
+            myGarden.AddTree(new Tree("purple"));
+            myGarden.AddTree(new Tree("orange"));
+            myGarden.AddFlower(new Flower("yellow"));
+            myGarden.AddFlower(new Flower("blue"));
+
+            myGarden.CheckPlants();
+            myGarden.Water(40);
+            myGarden.CheckPlants();
+            myGarden.Water(70);
+            myGarden.CheckPlants();
+
+
 
             Console.ReadLine();
         }

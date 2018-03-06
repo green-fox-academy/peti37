@@ -30,7 +30,7 @@ namespace The_Garden_Application
         public List<Plant> ThirstyPlants()
         {
             List<Plant> locsi = new List<Plant>();
-            foreach (Flower flower in plants)
+            foreach (Plant flower in plants)
             {
                 if (flower.waterAmount < 5)
                 {
@@ -41,7 +41,7 @@ namespace The_Garden_Application
                     locsi.Remove(flower);
                 }
             }
-            foreach (Tree tree in plants)
+            foreach (Plant tree in plants)
             {
                 if (tree.waterAmount < 5)
                 {
@@ -57,11 +57,28 @@ namespace The_Garden_Application
 
         public void Water(double amountOfWater)
         {
+            Console.WriteLine("Watering with " + amountOfWater);
+
             foreach (Plant plant in plants)
             {
                 if (plant.ReadyForWatering() == true)
                 {
                     plant.waterAmount += amountOfWater / ThirstyPlants().Count * plant.absorbLevel;
+                }
+            }
+        }
+
+        public void CheckPlants()
+        {
+            foreach (var plant in plants)
+            {
+                if (plant.waterAmount < plant.waterLevel)
+                {
+                    Console.WriteLine($"The {plant.color} {plant.name} needs water");
+                }
+                else
+                {
+                    Console.WriteLine($"The {plant.color} {plant.name} doesn't need water");
                 }
             }
         }

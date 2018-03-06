@@ -9,22 +9,17 @@ namespace The_Garden_Application
     class Plant
     {
         public string color;
-        public double waterAmount { get; set; }
-        protected double waterLevel;
+        public double waterAmount;
+        public double waterLevel;
         public double absorbLevel;
+        public string name;
         
 
-        public Plant(string color, double waterAmount, double waterLevel, double absorbLevel)
+        public Plant(string color)
         {
-            this.absorbLevel = absorbLevel;
-            this.waterLevel = waterLevel;
+
             this.color = color;
             waterAmount = 0;
-        }
-
-        public Plant()
-        {
-
         }
 
         public bool ReadyForWatering()

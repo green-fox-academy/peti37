@@ -8,21 +8,15 @@ namespace The_Garden_Application
 {
     class Tree : Plant
     {
-        public Tree(string color, double waterAmount, double waterLevel, double absorbLevel) : base(color, 0, 10, 0.4)
+        public Tree(string color) : base(color)
         {
-
+            this.color = color;
+            waterLevel = 10;
+            absorbLevel = 0.75;
+            name = "tree";
         }
 
-        public Tree()
-        {
-            if (waterAmount < waterLevel)
-            {
-                Console.WriteLine($"The {color} Tree needs water");
-            }
-            else
-            {
-                Console.WriteLine($"The {color} Tree doesn't need water");
-            }
-        }
+       
     }
+   
 }
