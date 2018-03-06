@@ -10,7 +10,7 @@ namespace The_Garden_Application
     {
         public Flower(string color) : base(color)
         {
-            waterLevel = 3;
+            waterLevel = 5;
             absorbLevel = 0.75;
             name = "flower";
         }

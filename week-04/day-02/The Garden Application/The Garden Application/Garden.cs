@@ -30,26 +30,15 @@ namespace The_Garden_Application
         public List<Plant> ThirstyPlants()
         {
             List<Plant> locsi = new List<Plant>();
-            foreach (Plant flower in plants)
+            foreach (Plant plant in plants)
             {
-                if (flower.waterAmount < 5)
+                if (plant.waterAmount < plant.waterLevel)
                 {
-                    locsi.Add(flower);
+                    locsi.Add(plant);
                 }
-                else if (flower.waterAmount >= 5)
+                else
                 {
-                    locsi.Remove(flower);
-                }
-            }
-            foreach (Plant tree in plants)
-            {
-                if (tree.waterAmount < 5)
-                {
-                    locsi.Add(tree);
-                }
-                else if (tree.waterAmount >= 5)
-                {
-                    locsi.Remove(tree);
+                    locsi.Remove(plant);
                 }
             }
             return locsi;
