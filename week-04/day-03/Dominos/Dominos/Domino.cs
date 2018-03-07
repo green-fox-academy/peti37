@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Dominos;
 
 namespace Dominos
 {
-    public class Domino: IComparable<Domino>
+    public class Domino: IComparable<Domino>, IPrintable
     {
         private readonly int[] Values;
 
@@ -19,6 +24,11 @@ namespace Dominos
         public int[] GetValues()
         {
             return Values;
+        }
+
+        public void PrintAllFields()
+        {
+            Console.Write($"[{GetValues()[0]},{GetValues()[1]}] ");
         }
     }
 }
