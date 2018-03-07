@@ -9,7 +9,7 @@ namespace The_Garden_Application
     class Plant
     {
         public string color;
-        public double waterAmount;
+        public double waterAmount { get; protected set; }
         public double waterLevel;
         public double absorbLevel;
         public string name;
@@ -17,7 +17,6 @@ namespace The_Garden_Application
 
         public Plant(string color)
         {
-
             this.color = color;
             waterAmount = 0;
         }
