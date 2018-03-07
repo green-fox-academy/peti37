@@ -8,11 +8,11 @@ namespace Animals_in_the_Zoo
 {
     abstract class Animal
     {
-       
-        protected string name { get; set; }
-        protected int age;
-        protected int legs;
-        protected string gender;
+
+        protected string name;
+        public int age;
+        public int legs;
+        public string gender;
 
         public Animal(string name)
         {
@@ -21,9 +21,7 @@ namespace Animals_in_the_Zoo
 
         public abstract void Greet();
 
-        public abstract void WantChild();
-
-        public abstract void Pair();
+        public abstract string WantChild();
 
         public abstract string GetName();
 

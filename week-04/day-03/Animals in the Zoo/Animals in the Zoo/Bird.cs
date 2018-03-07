@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Animals_in_the_Zoo
 {
-    class Mammal : Animal
+    class Bird : Animal
     {
-        public Mammal(string name) :base("")
+        public Bird(string name) : base("")
         {
             this.name = name;
         }
 
-        public Mammal(string name, int age, int legs, string gender) : base(name)
+        public Bird(string name, int age, int legs, string gender) : base(name)
         {
             this.name = name;
             this.age = age;
@@ -28,12 +28,12 @@ namespace Animals_in_the_Zoo
 
         public override void Greet()
         {
-            Console.WriteLine("Kah-Kaah!");
+            Console.WriteLine("Csirip!");
         }
 
         public override string WantChild()
         {
-            return $"{name}, want a child from my uterus";
+            return $"{name}, want a child from an egg";
         }
     }
 }

@@ -10,9 +10,18 @@ namespace Animals_in_the_Zoo
     {
         static void Main(string[] args)
         {
-            Mammal kecske = new Mammal("Kecske");
-            Console.WriteLine(kecske.GetName()); 
-            kecske.Greet();
+            var reptile = new Reptile("Crocodile");
+            var reptile2 = new Reptile("Frog");
+            var mammal = new Mammal("Koala");
+            var bird = new Bird("Parrot");
+
+            Console.WriteLine("Who want a baby?");
+            Console.WriteLine(reptile.GetName() + ", " + reptile.WantChild());
+            Console.WriteLine(mammal.GetName() + ", " + mammal.WantChild());
+            Console.WriteLine(bird.GetName() + ", " + bird.WantChild());
+            Console.WriteLine(reptile2.GetName() + ", " + reptile2.WantChild());
+
+
 
             Console.ReadLine();
         }
