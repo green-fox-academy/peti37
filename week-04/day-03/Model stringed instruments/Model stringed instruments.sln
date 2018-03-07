@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model stringed instruments", "Model stringed instruments\Model stringed instruments.csproj", "{B8CFEB7D-CBC7-4906-81C3-7C475B1995D9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8CFEB7D-CBC7-4906-81C3-7C475B1995D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8CFEB7D-CBC7-4906-81C3-7C475B1995D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8CFEB7D-CBC7-4906-81C3-7C475B1995D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8CFEB7D-CBC7-4906-81C3-7C475B1995D9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1078C5C4-46F5-426A-8FF1-AAEC5E79C0A2}
+	EndGlobalSection
+EndGlobal

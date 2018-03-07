@@ -19,16 +19,23 @@ namespace Dominos
             dominoes.Add(new Domino(7, 1));
 
             dominoes.Sort();
-            Console.WriteLine(dominoes[1].CompareTo(dominoes[0]));
+
             for (int i = 0; i < dominoes.Count; i++)
             {
-                foreach (var item in dominoes[i].GetValues())
+                for (int j = 0; j < 2; j++)
                 {
-                    Console.Write($"{item} ");
+                    if (j % 2 == 0)
+                    {
+                        Console.Write("[" + dominoes[i].GetValues()[j] + ",");
+
+                    }
+                    else if (j % 2 == 1)
+                    {
+                        Console.Write(dominoes[i].GetValues()[j] + "] ");
+                    }
                 }
             }
-
-            Console.ReadLine();
+                Console.ReadLine();
             // the order of your dominoes should look like this: [[1,5], [2,4], [4,6], [5,2], [6,7], [7,1]]
         }
     }
