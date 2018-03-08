@@ -11,11 +11,13 @@ namespace Summa
     {
 
 
-        public int SumMyNumbersBitch(List<int> intList)
+        public int? SumMyNumbersBitch(List<int> intList)
         {
-            int sum = 0;
-            sum = intList.Sum();
-            return sum;
+            if (intList == null)
+            {
+                return null;
+            }
+            return intList.Sum();
         }
     }
 }
