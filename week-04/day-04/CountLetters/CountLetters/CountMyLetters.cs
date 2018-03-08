@@ -11,12 +11,16 @@ namespace CountLetters
         public Dictionary<char, int> Counter(string inputWord)
         {
             var dic = new Dictionary<char, int>();
-            char[] inputWordArray = inputWord.ToCharArray();
-            int charCount = 1;
-            for (int i = 0; i < inputWordArray.Length; i++)
+            for (int i = 0; i < inputWord.Length; i++)
             {
-                dic.Add(inputWordArray[i], charCount);
-                
+                if (dic.ContainsKey(inputWord[i]))
+                {
+                    dic[inputWord[i]]++;
+                }
+                else
+                {
+                    dic.Add(inputWord[i], 1);
+                }
             }
             return dic;
         }

@@ -15,9 +15,9 @@ namespace Testing
         public void TestCounter()
         {
             CountMyLetters first = new CountMyLetters();
-            string input = "first";
+            string input = "fiiirst";
 
-            Assert.AreEqual(1, first.Counter(input)['i']);
+            Assert.AreEqual(3, first.Counter(input)['i']);
 
 
         }
