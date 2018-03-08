@@ -25,7 +25,7 @@ namespace TestLib
         }
 
         [TestCase]
-        public void TestMyListWithNoElemets()
+        public void TestMyListWithNoElements()
         {
             Summ summer = new Summ();
             var emptyList = new List<int>();
@@ -33,7 +33,7 @@ namespace TestLib
         }
 
         [TestCase]
-        public void TestMyListWithOneElemet()
+        public void TestMyListWithOneElement()
         {
             Summ summer = new Summ();
             var oneElementList = new List<int>();

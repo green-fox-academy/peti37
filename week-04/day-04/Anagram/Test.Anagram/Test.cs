@@ -15,7 +15,10 @@ namespace Test.Anagram
         public void TestMyAnagram()
         {
             AnagramStrings First = new AnagramStrings();
+            string firstWord = "hard";
+            string secondWord = "dhar";
 
+            Assert.AreEqual(true, First.Anagrammer(firstWord, secondWord));
         }
     }
 }
