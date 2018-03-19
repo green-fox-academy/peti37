@@ -22,8 +22,12 @@ namespace Wanderer
     public partial class MainWindow : Window
     {
         Hero hero = new Hero();
+        Skeleton skeleton = new Skeleton();
+
         int borderPosX = 0;
         int borderPosY = 0;
+        int keyToggleCounter = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,35 +40,45 @@ namespace Wanderer
 
         private void WindowKeyDown(object sender, KeyEventArgs e)
         {
+            canvas.Children.Clear();
             var tile = new Tile();
             var map = new Map();
-            canvas.Children.Clear();
             map.DrawMap(canvas);
             map.Read();
+            skeleton.DrawSkeleton(canvas);
 
+            if (keyToggleCounter % 2 == 0)
+            {
+                skeleton.PosY += 50;
+                skeleton.DrawSkeleton(canvas);
+            }
             if (e.Key == Key.Down && borderPosY < 9 && map.content[borderPosY + 1][borderPosX] == '0')
             {
                 hero.PosY += 50;
                 borderPosY++;
                 hero.DrawHeroDown(canvas);
+                keyToggleCounter++;
             }
             else if (e.Key == Key.Right && borderPosX < 9 && map.content[borderPosY][borderPosX + 1] == '0')
             {
                 hero.PosX += 50;
                 borderPosX++;
                 hero.DrawHeroRight(canvas);
+                keyToggleCounter++;
             }
             else if (e.Key == Key.Left && borderPosX > 0 && map.content[borderPosY][borderPosX - 1] == '0')
             {
                 hero.PosX -= 50;
                 borderPosX--;
                 hero.DrawHeroLeft(canvas);
+                keyToggleCounter++;
             }
             else if (e.Key == Key.Up && borderPosY > 0 && map.content[borderPosY - 1][borderPosX] == '0')
             {
                 hero.PosY -= 50;
                 borderPosY--;
                 hero.DrawHeroUp(canvas);
+                keyToggleCounter++;
             }
             else
             {
