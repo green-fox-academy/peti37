@@ -54,7 +54,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Character.cs" />
     <Compile Include="Hero.cs" />
+    <Compile Include="Monster.cs" />
     <Compile Include="Skeleton.cs" />
     <Compile Include="Tile.cs" />
     <Page Include="MainWindow.xaml">

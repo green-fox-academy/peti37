@@ -26,6 +26,8 @@ namespace Wanderer
 
         int borderPosX = 0;
         int borderPosY = 0;
+        int skeletonPosX = 0;
+        int skeletonPosY = 0;
         int keyToggleCounter = 0;
 
         public MainWindow()
@@ -45,11 +47,15 @@ namespace Wanderer
             var map = new Map();
             map.DrawMap(canvas);
             map.Read();
-            skeleton.DrawSkeleton(canvas);
 
-            if (keyToggleCounter % 2 == 0)
+            if (keyToggleCounter % 2 == 0 && map.content[skeletonPosY + 1][skeletonPosX] == '0')
             {
+                skeletonPosY++;
                 skeleton.PosY += 50;
+                skeleton.DrawSkeleton(canvas);
+            }
+            if (keyToggleCounter % 2 == 1 || keyToggleCounter % 2 == 0)
+            {
                 skeleton.DrawSkeleton(canvas);
             }
             if (e.Key == Key.Down && borderPosY < 9 && map.content[borderPosY + 1][borderPosX] == '0')

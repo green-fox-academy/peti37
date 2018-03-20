@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace Wanderer
 {
-    class Skeleton
+    class Skeleton : Monster
     {
         int posX = 0;
         int posY = 0;
