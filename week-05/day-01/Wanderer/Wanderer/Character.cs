@@ -10,7 +10,6 @@ namespace Wanderer
 {
     abstract class Character
     {
-        public abstract void Move(object sender, KeyEventArgs e, Canvas canvas);
+        
     }
-    
 }

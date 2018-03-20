@@ -13,10 +13,10 @@ namespace Wanderer
         int posX = 0;
         int posY = 0;
 
-        Hero hero = new Hero();
         int borderPosX = 0;
         int borderPosY = 0;
         public int keyToggleCounter = 0;
+
 
         public int PosX { get => posX; set => posX = value; }
         public int PosY { get => posY; set => posY = value; }
@@ -45,9 +45,45 @@ namespace Wanderer
             foxDraw.AddImage("img/hero-Up.png", PosX, PosY);
         }
 
-        public override void Move(object sender, KeyEventArgs e, Canvas canvas)
+        public void Move(Canvas canvas, int numberX, int numberY)
         {
-            throw new NotImplementedException();
+            canvas.Children.Clear();
+            Map map = new Map();
+            map.DrawMap(canvas);
+            map.Read();
+
+            if (numberX == 0 && numberY == 1 && borderPosY < 9 && map.content[borderPosY + 1][borderPosX] == '0')
+            {
+                PosY += 50;
+                borderPosY++;
+                DrawHeroDown(canvas);
+                keyToggleCounter++;
+            }
+            else if (numberX == 1 && numberY == 0 && borderPosX < 9 && map.content[borderPosY][borderPosX + 1] == '0')
+            {
+                PosX += 50;
+                borderPosX++;
+                DrawHeroRight(canvas);
+                keyToggleCounter++;
+            }
+            else if (numberX == -1 && numberY == 0 && borderPosX > 0 && map.content[borderPosY][borderPosX - 1] == '0')
+            {
+                PosX -= 50;
+                borderPosX--;
+                DrawHeroLeft(canvas);
+                keyToggleCounter++;
+            }
+            else if (numberX == 0 && numberY == -1 && borderPosY > 0 && map.content[borderPosY - 1][borderPosX] == '0')
+            {
+                PosY -= 50;
+                borderPosY--;
+                DrawHeroUp(canvas);
+                keyToggleCounter++;
+            }
+            else
+            {
+                DrawHeroDown(canvas);
+            }
         }
     }
 }
