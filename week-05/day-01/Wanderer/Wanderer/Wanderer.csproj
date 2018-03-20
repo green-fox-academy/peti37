@@ -54,11 +54,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Boss.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="CharacterList.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="IMove.cs" />
     <Compile Include="Monster.cs" />
-    <Compile Include="Skeleton.cs" />
+    <Compile Include="Randomizer.cs" />
     <Compile Include="Tile.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

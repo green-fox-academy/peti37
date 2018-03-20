@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +19,9 @@ namespace Wanderer
     public partial class MainWindow : Window, IMove
     {
         Hero hero = new Hero();
-        Skeleton skeleton = new Skeleton();
+        Monster monster = new Monster();
+        Monster monster2 = new Monster();
+        Boss boss = new Boss();
         Random rnd = new Random();
 
 
@@ -28,8 +31,9 @@ namespace Wanderer
             InitializeComponent();
             var map = new Map();
             map.DrawMap(canvas);
+            monster.DrawMonster(canvas);
+            monster2.DrawMonster(canvas);
             hero.DrawHeroDown(canvas);
-            skeleton.DrawSkeleton(canvas);
         }
 
         public void Move(object sender, KeyEventArgs e)
@@ -42,12 +46,22 @@ namespace Wanderer
 
             if (hero.keyToggleCounter % 2 == 1)
             {
-                skeleton.Move(canvas, rnd.Next(1, 5));
+                monster.Move(canvas, rnd.Next(1, 5));
             }
             if (hero.keyToggleCounter % 2 == 1 || hero.keyToggleCounter % 2 == 0)
             {
-                skeleton.DrawSkeleton(canvas);
+                monster.DrawMonster(canvas);
             }
+
+            if (hero.keyToggleCounter % 2 == 0)
+            {
+                monster2.Move(canvas, rnd.Next(1, 5));
+            }
+            if (hero.keyToggleCounter % 2 == 1 || hero.keyToggleCounter % 2 == 0)
+            {
+                monster2.DrawMonster(canvas);
+            }
+
             if (e.Key == Key.Down)
             {
                 hero.Move(canvas, 0, 1);
