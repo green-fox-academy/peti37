@@ -8,8 +8,8 @@ using System.Windows.Input;
 
 namespace Wanderer
 {
-    abstract class Monster : Character
+    class Monster : Character
     {
-        abstract public void Move(Canvas canvas, Monster monster);
+        
     }
 }

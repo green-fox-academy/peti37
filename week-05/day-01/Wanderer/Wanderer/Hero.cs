@@ -47,9 +47,8 @@ namespace Wanderer
 
         public void Move(Canvas canvas, int numberX, int numberY)
         {
-            canvas.Children.Clear();
             Map map = new Map();
-            map.DrawMap(canvas);
+            //map.DrawMap(canvas);
             map.Read();
 
             if (numberX == 0 && numberY == 1 && borderPosY < 9 && map.content[borderPosY + 1][borderPosX] == '0')
@@ -57,33 +56,37 @@ namespace Wanderer
                 PosY += 50;
                 borderPosY++;
                 DrawHeroDown(canvas);
-                keyToggleCounter++;
+                //keyToggleCounter++;
             }
             else if (numberX == 1 && numberY == 0 && borderPosX < 9 && map.content[borderPosY][borderPosX + 1] == '0')
             {
                 PosX += 50;
                 borderPosX++;
                 DrawHeroRight(canvas);
-                keyToggleCounter++;
+                //keyToggleCounter++;
             }
             else if (numberX == -1 && numberY == 0 && borderPosX > 0 && map.content[borderPosY][borderPosX - 1] == '0')
             {
                 PosX -= 50;
                 borderPosX--;
                 DrawHeroLeft(canvas);
-                keyToggleCounter++;
+                //keyToggleCounter++;
             }
             else if (numberX == 0 && numberY == -1 && borderPosY > 0 && map.content[borderPosY - 1][borderPosX] == '0')
             {
                 PosY -= 50;
                 borderPosY--;
                 DrawHeroUp(canvas);
-                keyToggleCounter++;
+                //keyToggleCounter++;
             }
             else
             {
                 DrawHeroDown(canvas);
             }
+        }
+        public int StepCounter()
+        {
+            return keyToggleCounter;
         }
     }
 }
