@@ -18,11 +18,15 @@ namespace Wanderer
 {
     public partial class MainWindow : Window, IMove
     {
-        Hero hero = new Hero();
         Monster monster = new Monster();
         Monster monster2 = new Monster();
+        Hero hero = new Hero();
         Boss boss = new Boss();
         Random rnd = new Random();
+        List<Monster> charList = new List<Monster>();
+        List<Monster> charList2 = new List<Monster>();
+        public static int keyToggleCounter = 0;
+
 
 
 
@@ -30,10 +34,12 @@ namespace Wanderer
         {
             InitializeComponent();
             var map = new Map();
+            Characters.AddToList(monster);
+            Characters.AddToList(monster2);
+            canvas.Children.Clear();
             map.DrawMap(canvas);
-            monster.DrawMonster(canvas);
-            monster2.DrawMonster(canvas);
             hero.DrawHeroDown(canvas);
+            Characters.DrawAllMonsters(canvas);
         }
 
         public void Move(object sender, KeyEventArgs e)
@@ -41,46 +47,39 @@ namespace Wanderer
             canvas.Children.Clear();
             Map map = new Map();
             map.DrawMap(canvas);
+            Characters.MoveMonsters(canvas);
+            Characters.Occupied(canvas, monster);
 
-
-
-            if (hero.keyToggleCounter % 2 == 1)
+            for (int i = 0; i < Characters.GetList().Count; i++)
             {
-                monster.Move(canvas, rnd.Next(1, 5));
-            }
-            if (hero.keyToggleCounter % 2 == 1 || hero.keyToggleCounter % 2 == 0)
-            {
-                monster.DrawMonster(canvas);
-            }
-
-            if (hero.keyToggleCounter % 2 == 0)
-            {
-                monster2.Move(canvas, rnd.Next(1, 5));
-            }
-            if (hero.keyToggleCounter % 2 == 1 || hero.keyToggleCounter % 2 == 0)
-            {
-                monster2.DrawMonster(canvas);
+                if (Characters.GetList()[i].GetPosition(Characters.GetList()[i].PosX, Characters.GetList()[i].PosY)== hero.GetPosition(hero.PosX, hero.PosY))
+                {
+                    Characters.GetList().Remove(Characters.GetList()[i]);
+                    canvas.Children.Clear();
+                    map.DrawMap(canvas);
+                    Characters.DrawAllMonsters(canvas);
+                }
             }
 
             if (e.Key == Key.Down)
             {
-                hero.Move(canvas, 0, 1);
+                hero.Move(canvas, 1);
                 hero.keyToggleCounter++;
             }
             else if (e.Key == Key.Up)
             {
-                hero.Move(canvas, 0, -1);
+                hero.Move(canvas, 4);
                 hero.keyToggleCounter++;
 
             }
             else if (e.Key == Key.Right)
             {
-                hero.Move(canvas, 1, 0);
+                hero.Move(canvas, 2);
                 hero.keyToggleCounter++;
             }
             else if (e.Key == Key.Left)
             {
-                hero.Move(canvas, -1, 0);
+                hero.Move(canvas, 3);
                 hero.keyToggleCounter++;
             }
         }

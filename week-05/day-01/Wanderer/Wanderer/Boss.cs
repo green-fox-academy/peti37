@@ -2,61 +2,64 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Wanderer
 {
     class Boss : Monster
     {
-        //static Random rand = new Random();
-        //static int randomX = rand.Next(0, 10);
-        //static int randomY = rand.Next(0, 10);
-        //int posX = randomX * 50;
-        //int posY = randomY * 50;
-        //public int monsterPosX = randomX;
-        //public int monsterPosY = randomY;
-        //public int PosX { get => posX; set => posX = value; }
-        //public int PosY { get => posY; set => posY = value; }
-        //public int RandomX { get => randomX; set => randomX = value; }
-        //public int RandomY { get => randomY; set => randomY = value; }
+        static Random rand = new Random();
+        public new int PosX = rand.Next(0, 10) * 50;
+        public new int PosY = rand.Next(0, 10) * 50;
 
-        //public void DrawBoss(Canvas canvas)
-        //{
-        //    var foxDraw = new FoxDraw(canvas);
-        //    foxDraw.AddImage("img/boss.png", PosX, PosY);
-        //}
 
-        //public void Move(Canvas canvas, int number)
-        //{
-        //    Map map = new Map();
+        public override void DrawMonster(Canvas canvas)
+        {
+            Map map = new Map();
+            map.Read();
+            var foxDraw = new FoxDraw(canvas);
+            Tile tile = new Tile();
+            Monster monster = new Monster();
+            Hero hero = new Hero();
+            while ('0' != map.content[PosY / 50][PosX / 50] || hero.GetPosition(hero.PosX, hero.PosY) == GetPosition(PosX, PosY))
+            {
+                Random sss = new Random();
+                PosY = sss.Next(0, 10)*50;
+                PosX = sss.Next(0, 10)*50;
+            }
+            foxDraw.AddImage("img/boss.png", PosX, PosY);
+        }
 
-        //    map.Read();
+        public override void Move(Canvas canvas, int number)
+        {
+            Map map = new Map();
+            map.Read();
+            Tile tile = new Tile();
+            if (number == 1 && PosY / 50 < 9 && map.content[PosY / 50 + 1][PosX / 50] == '0')
+            {
+                PosY += 50;
+                DrawMonster(canvas);
+            }
+            if (number == 2 && PosX / 50 < 9 && map.content[PosY / 50][PosX / 50 + 1] == '0')
+            {
+                PosX += 50;
+                DrawMonster(canvas);
+            }
+            if (number == 3 && PosY / 50 > 0 && map.content[PosY / 50 - 1][PosX / 50] == '0')
+            {
+                PosY -= 50;
+                DrawMonster(canvas);
+            }
+            if (number == 4 && PosX / 50 > 0 && map.content[PosY / 50][PosX / 50 - 1] == '0')
+            {
+                PosX -= 50;
+                DrawMonster(canvas);
+            }
+        }
 
-        //    if (number == 1 && monsterPosY < 9 && map.content[monsterPosY + 1][monsterPosX] == '0')
-        //    {
-        //        monsterPosY++;
-        //        PosY += 50;
-        //        DrawBoss(canvas);
-        //    }
-        //    if (number == 2 && monsterPosX < 9 && map.content[monsterPosY][monsterPosX + 1] == '0')
-        //    {
-        //        monsterPosX++;
-        //        PosX += 50;
-        //        DrawBoss(canvas);
-        //    }
-        //    if (number == 3 && monsterPosY > 0 && map.content[monsterPosY - 1][monsterPosX] == '0')
-        //    {
-        //        monsterPosY--;
-        //        PosY -= 50;
-        //        DrawBoss(canvas);
-        //    }
-        //    if (number == 4 && monsterPosX > 0 && map.content[monsterPosY][monsterPosX - 1] == '0')
-        //    {
-        //        monsterPosX--;
-        //        PosX -= 50;
-        //        DrawBoss(canvas);
-        //    }
-        //}
+
     }
 }

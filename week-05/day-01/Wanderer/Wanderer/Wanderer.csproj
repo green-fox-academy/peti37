@@ -56,7 +56,7 @@
     </ApplicationDefinition>
     <Compile Include="Boss.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="CharacterList.cs" />
+    <Compile Include="Characters.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="IMove.cs" />
     <Compile Include="Monster.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -10,16 +11,11 @@ namespace Wanderer
 {
     class Hero : Character
     {
-        int posX = 0;
-        int posY = 0;
-
-        int borderPosX = 0;
-        int borderPosY = 0;
+        int heroPosX = 0;
+        int heroPosY = 0;
         public int keyToggleCounter = 0;
-
-
-        public int PosX { get => posX; set => posX = value; }
-        public int PosY { get => posY; set => posY = value; }
+        public int HeroPosX { get => heroPosX; set => heroPosX = value; }
+        public int HeroPosY { get => heroPosY; set => heroPosY = value; }
 
         public void DrawHeroDown(Canvas canvas)
         {
@@ -45,43 +41,57 @@ namespace Wanderer
             foxDraw.AddImage("img/hero-Up.png", PosX, PosY);
         }
 
-        public void Move(Canvas canvas, int numberX, int numberY)
+        public override void Move(Canvas canvas, int number)
         {
             Map map = new Map();
             map.Read();
 
-            if (numberX == 0 && numberY == 1 && borderPosY < 9 && map.content[borderPosY + 1][borderPosX] == '0')
+            if (number == 1 && heroPosY < 9 && map.content[heroPosY + 1][heroPosX] == '0')
             {
                 PosY += 50;
-                borderPosY++;
+                heroPosY++;
                 DrawHeroDown(canvas);
             }
-            else if (numberX == 1 && numberY == 0 && borderPosX < 9 && map.content[borderPosY][borderPosX + 1] == '0')
+            else if (number == 2 && heroPosX < 9 && map.content[heroPosY][heroPosX + 1] == '0')
             {
                 PosX += 50;
-                borderPosX++;
+                heroPosX++;
                 DrawHeroRight(canvas);
             }
-            else if (numberX == -1 && numberY == 0 && borderPosX > 0 && map.content[borderPosY][borderPosX - 1] == '0')
+            else if (number == 3 && heroPosX > 0 && map.content[heroPosY][heroPosX - 1] == '0')
             {
                 PosX -= 50;
-                borderPosX--;
+                heroPosX--;
                 DrawHeroLeft(canvas);
             }
-            else if (numberX == 0 && numberY == -1 && borderPosY > 0 && map.content[borderPosY - 1][borderPosX] == '0')
+            else if (number == 4 && heroPosY > 0 && map.content[heroPosY - 1][heroPosX] == '0')
             {
                 PosY -= 50;
-                borderPosY--;
+                heroPosY--;
                 DrawHeroUp(canvas);
             }
             else
             {
                 DrawHeroDown(canvas);
             }
+            keyToggleCounter++;
         }
         public int StepCounter()
         {
             return keyToggleCounter;
+        }
+
+        public override Point GetPosition(int X, int Y)
+        {
+            return new Point(X, Y);
+        }
+
+
+
+
+        public override void DrawMonster(Canvas canvas)
+        {
+            throw new NotImplementedException();
         }
     }
 }
