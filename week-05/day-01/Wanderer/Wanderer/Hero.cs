@@ -11,11 +11,6 @@ namespace Wanderer
 {
     class Hero : Character
     {
-        int heroPosX = 0;
-        int heroPosY = 0;
-        public int keyToggleCounter = 0;
-        public int HeroPosX { get => heroPosX; set => heroPosX = value; }
-        public int HeroPosY { get => heroPosY; set => heroPosY = value; }
 
         public void DrawHeroDown(Canvas canvas)
         {
@@ -46,48 +41,36 @@ namespace Wanderer
             Map map = new Map();
             map.Read();
 
-            if (number == 1 && heroPosY < 9 && map.content[heroPosY + 1][heroPosX] == '0')
+            if (number == 1 && PosY/50 < 9 && map.content[PosY/50 + 1][PosX/50] == '0')
             {
                 PosY += 50;
-                heroPosY++;
                 DrawHeroDown(canvas);
             }
-            else if (number == 2 && heroPosX < 9 && map.content[heroPosY][heroPosX + 1] == '0')
+            else if (number == 2 && PosX/50 < 9 && map.content[PosY/50][PosX/50 + 1] == '0')
             {
                 PosX += 50;
-                heroPosX++;
                 DrawHeroRight(canvas);
             }
-            else if (number == 3 && heroPosX > 0 && map.content[heroPosY][heroPosX - 1] == '0')
+            else if (number == 3 && PosX/50 > 0 && map.content[PosY/50][PosX/50 - 1] == '0')
             {
                 PosX -= 50;
-                heroPosX--;
                 DrawHeroLeft(canvas);
             }
-            else if (number == 4 && heroPosY > 0 && map.content[heroPosY - 1][heroPosX] == '0')
+            else if (number == 4 && PosY/50 > 0 && map.content[PosY/50 - 1][PosX/50] == '0')
             {
                 PosY -= 50;
-                heroPosY--;
                 DrawHeroUp(canvas);
             }
             else
             {
                 DrawHeroDown(canvas);
             }
-            keyToggleCounter++;
-        }
-        public int StepCounter()
-        {
-            return keyToggleCounter;
         }
 
         public override Point GetPosition(int X, int Y)
         {
             return new Point(X, Y);
         }
-
-
-
 
         public override void DrawMonster(Canvas canvas)
         {

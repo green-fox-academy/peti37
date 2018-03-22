@@ -53,6 +53,11 @@ namespace Wanderer
             {
                 PosX -= 50;
             }
+            if (number == 0)
+            {
+                PosX -= 0;
+                PosY -= 0;
+            }
             FoxDraw foxDraw = new FoxDraw(canvas);
             foxDraw.AddImage("img/skeleton.png", PosX, PosY);
         }
