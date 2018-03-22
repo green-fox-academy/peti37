@@ -43,14 +43,14 @@ namespace Wanderer
             canvas.Children.Clear();
             Map map = new Map();
             map.DrawMap(canvas);
-            if (keyToggleCounter % 2 == 0)
+            if (keyToggleCounter % 2 == 1)
             {
                 chars.MoveMonsters(canvas);
                 chars.DrawAllMonsters(canvas);
             }
             else
             {
-                chars.StayMonsters(canvas);
+                chars.DrawAllMonsters(canvas);
             }
             chars.Occupied(canvas, monster);
 
@@ -74,6 +74,12 @@ namespace Wanderer
             {
                 hero.Move(canvas, 3);
                 keyToggleCounter++;
+            }
+
+            else if (e.Key == Key.Space)
+            {
+                keyToggleCounter = 0;
+                hero.Move(canvas, 0);
             }
 
             for (int i = 0; i < chars.GetList().Count; i++)

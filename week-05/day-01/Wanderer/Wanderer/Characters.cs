@@ -58,15 +58,5 @@ namespace Wanderer
                 foxDraw.AddImage("img/skeleton.png", monster.PosX, monster.PosY);
             }
         }
-
-        public void StayMonsters(Canvas canvas)
-        {
-            foreach (var monster in characters)
-            {
-                monster.Move(canvas, 0);
-                FoxDraw foxDraw = new FoxDraw(canvas);
-                foxDraw.AddImage("img/skeleton.png", monster.PosX, monster.PosY);
-            }
-        }
     }
 }

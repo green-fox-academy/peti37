@@ -61,6 +61,12 @@ namespace Wanderer
                 PosY -= 50;
                 DrawHeroUp(canvas);
             }
+            else if (number == 0)
+            {
+                PosX -= 0;
+                PosY -= 0;
+                DrawHeroDown(canvas);
+            }
             else
             {
                 DrawHeroDown(canvas);

@@ -41,22 +41,17 @@ namespace Wanderer
             {
                 PosY += 50;
             }
-            if (number == 2 && PosX / 50 < 9 && map.content[PosY / 50][PosX / 50 + 1] == '0' )
+            if (number == 2 && PosX / 50 < 9 && map.content[PosY / 50][PosX / 50 + 1] == '0')
             {
                 PosX += 50;
             }
-            if (number == 3 && PosY / 50 > 0 && map.content[PosY / 50 - 1][PosX / 50] == '0' )
+            if (number == 3 && PosY / 50 > 0 && map.content[PosY / 50 - 1][PosX / 50] == '0')
             {
                 PosY -= 50;
             }
-            if (number == 4 && PosX / 50 > 0 && map.content[PosY / 50][PosX / 50 - 1] == '0' )
+            if (number == 4 && PosX / 50 > 0 && map.content[PosY / 50][PosX / 50 - 1] == '0')
             {
                 PosX -= 50;
-            }
-            if (number == 0)
-            {
-                PosX -= 0;
-                PosY -= 0;
             }
             FoxDraw foxDraw = new FoxDraw(canvas);
             foxDraw.AddImage("img/skeleton.png", PosX, PosY);
