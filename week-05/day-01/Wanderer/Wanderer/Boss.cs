@@ -15,6 +15,10 @@ namespace Wanderer
         public new int PosX = rand.Next(0, 10) * 50;
         public new int PosY = rand.Next(0, 10) * 50;
 
+        public Boss()
+        {
+
+        }
 
         public override void DrawMonster(Canvas canvas)
         {

@@ -11,11 +11,38 @@ namespace Wanderer
 {
     class Hero : Character
     {
+        static Random d6 = new Random();
         public int stepCounter;
+        public int heroLevel;
+
+        public Hero() : base(25 + 3 * d6.Next(1, 7), 5 + d6.Next(1, 7), 2 * d6.Next(1, 7))
+        {
+
+        }
+        public void LevelUp()
+        {
+            hp += d6.Next(1, 7);
+            sp += d6.Next(1, 7);
+            dp += d6.Next(1, 7);
+        }
 
         public int StepCounter()
         {
            return stepCounter++;
+        }
+
+        public int KillCount()
+        {
+            return heroLevel++;
+        }
+
+        public override string GetStatus()
+        {
+            return $"Hero Stats\n" +
+                $"HP: {hp}" +
+                $"\nDefP: {dp}\n" +
+                $"StrikeP: {sp}\n" +
+                $"Herolevel: {heroLevel}";
         }
 
         public void DrawHeroDown(Canvas canvas)

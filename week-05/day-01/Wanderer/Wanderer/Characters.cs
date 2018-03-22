@@ -28,6 +28,18 @@ namespace Wanderer
             return characters;
         }
 
+        public bool HeroIsOnMonster(Hero hero)
+        {
+            for (int i = 0; i < GetList().Count; i++)
+            {
+                if (GetList()[i].GetPosition(GetList()[i].PosX, GetList()[i].PosY) == hero.GetPosition(hero.PosX, hero.PosY))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void Occupied(Canvas canvas, Character character)
         {
             Random randi = new Random();

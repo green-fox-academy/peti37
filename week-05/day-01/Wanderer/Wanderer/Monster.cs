@@ -11,9 +11,22 @@ namespace Wanderer
 {
     public class Monster : Character
     {
-
+        static Random d6 = new Random();
         static Random rand = new Random();
+        static private int level = 2;
 
+        public Monster() : base(2 * level * d6.Next(1,7), level * d6.Next(1, 7), level/2 * d6.Next(1, 7))
+        {
+
+        }
+
+        public override string GetStatus()
+        {
+            return $"Enemy Stats\n" +
+                $"HP: {hp}" +
+                $"\nDefP: {dp}\n" +
+                $"StrikeP: {sp}\n";
+        }
 
         public override void DrawMonster(Canvas canvas)
         {

@@ -18,9 +18,12 @@ namespace Wanderer
 {
     public partial class MainWindow : Window, IMove
     {
+        HeahUpDisplay hud;
+        HeahUpDisplay hud2;
         Characters chars = new Characters();
         Monster monster = new Monster();
         Monster monster2 = new Monster();
+        Monster monster3 = new Monster();
         Hero hero = new Hero();
         Boss boss = new Boss();
         Random rnd = new Random();
@@ -28,14 +31,18 @@ namespace Wanderer
 
         public MainWindow()
         {
+            hud = new HeahUpDisplay(canvas, hero.GetStatus());
+            hud2 = new HeahUpDisplay(canvas, monster.GetStatus());
             InitializeComponent();
             var map = new Map();
             chars.AddToList(monster);
             chars.AddToList(monster2);
+            chars.AddToList(monster3);
             canvas.Children.Clear();
             map.DrawMap(canvas);
             hero.DrawHeroDown(canvas);
             chars.DrawAllMonsters(canvas);
+            HUD.Children.Add(hud.heroStatus);
         }
 
         public void Move(object sender, KeyEventArgs e)
@@ -47,10 +54,36 @@ namespace Wanderer
             {
                 hero.stepCounter = 1;
                 hero.Move(canvas, 0);
+                for (int i = 0; i < chars.GetList().Count; i++)
+                {
+                    if (chars.GetList()[i].GetPosition(chars.GetList()[i].PosX, chars.GetList()[i].PosY) == hero.GetPosition(hero.PosX, hero.PosY))
+                    {
+                        EnemyHUD.Children.Remove(hud2.monsterStatus);
+                        EnemyHUD.Children.Add(hud2.monsterStatus);
+                        chars.GetList()[i].hp -= hero.sp;
+                        hero.hp -= chars.GetList()[i].sp;
+                        hud2.RefreshStatusEnemy(chars.GetList()[i].GetStatus());
+                        if (chars.GetList()[i].hp <= 0)
+                        {
+                            chars.RemoveFromList(chars.GetList()[i]);
+                            hero.LevelUp();
+                            hero.KillCount();
+                            EnemyHUD.Children.Remove(hud2.monsterStatus);
+                        }
+                        if (hero.hp <= 0)
+                        {
+                            hero.hp += 1000;
+                        }
+                    }
+                }
             }
+            hud.RefreshStatus(hero.GetStatus());
             chars.MoveMonsters(canvas, hero);
             chars.DrawAllMonsters(canvas);
             chars.Occupied(canvas, monster);
+            chars.Occupied(canvas, monster2);
+            chars.Occupied(canvas, monster3);
+
 
             if (e.Key == Key.Down)
             {
@@ -74,15 +107,6 @@ namespace Wanderer
                 hero.StepCounter();
             }
 
-            
-
-            for (int i = 0; i < chars.GetList().Count; i++)
-            {
-                if (chars.GetList()[i].GetPosition(chars.GetList()[i].PosX, chars.GetList()[i].PosY) == hero.GetPosition(hero.PosX, hero.PosY))
-                {
-                    chars.RemoveFromList(chars.GetList()[i]);
-                }
-            }
         }
     }
 }
