@@ -11,6 +11,12 @@ namespace Wanderer
 {
     class Hero : Character
     {
+        public int stepCounter;
+
+        public int StepCounter()
+        {
+           return stepCounter++;
+        }
 
         public void DrawHeroDown(Canvas canvas)
         {

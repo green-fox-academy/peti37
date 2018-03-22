@@ -43,44 +43,38 @@ namespace Wanderer
             canvas.Children.Clear();
             Map map = new Map();
             map.DrawMap(canvas);
-            if (keyToggleCounter % 2 == 1)
+            if (e.Key == Key.Space)
             {
-                chars.MoveMonsters(canvas);
-                chars.DrawAllMonsters(canvas);
+                hero.stepCounter = 1;
+                hero.Move(canvas, 0);
             }
-            else
-            {
-                chars.DrawAllMonsters(canvas);
-            }
+            chars.MoveMonsters(canvas, hero);
+            chars.DrawAllMonsters(canvas);
             chars.Occupied(canvas, monster);
 
             if (e.Key == Key.Down)
             {
                 hero.Move(canvas, 1);
-                keyToggleCounter++;
+                hero.StepCounter();
             }
             else if (e.Key == Key.Up)
             {
                 hero.Move(canvas, 4);
-                keyToggleCounter++;
+                hero.StepCounter();
 
             }
             else if (e.Key == Key.Right)
             {
                 hero.Move(canvas, 2);
-                keyToggleCounter++;
+                hero.StepCounter();
             }
             else if (e.Key == Key.Left)
             {
                 hero.Move(canvas, 3);
-                keyToggleCounter++;
+                hero.StepCounter();
             }
 
-            else if (e.Key == Key.Space)
-            {
-                keyToggleCounter = 0;
-                hero.Move(canvas, 0);
-            }
+            
 
             for (int i = 0; i < chars.GetList().Count; i++)
             {

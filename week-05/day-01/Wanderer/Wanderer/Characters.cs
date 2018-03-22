@@ -48,15 +48,22 @@ namespace Wanderer
             }
         }
 
-        public void MoveMonsters(Canvas canvas)
+        public void MoveMonsters(Canvas canvas, Hero hero)
         {
             Random rnd = new Random();
+            if (hero.stepCounter % 2 == 0)
+            {
+                foreach (var monster in characters)
+                {
+                    monster.Move(canvas, rnd.Next(1, 5));
+                }
+            }
             foreach (var monster in characters)
             {
-                monster.Move(canvas, rnd.Next(1, 5));
                 FoxDraw foxDraw = new FoxDraw(canvas);
                 foxDraw.AddImage("img/skeleton.png", monster.PosX, monster.PosY);
             }
+           
         }
     }
 }
