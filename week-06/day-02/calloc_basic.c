@@ -6,7 +6,7 @@ int main()
 {
     int *array;
     int i;
-    array = (int *)malloc(10 * sizeof(int));
+    array = (int *)calloc(10, sizeof(int));
     for (i = 0; i < 10; i++)
     {
         if (i < 5)
