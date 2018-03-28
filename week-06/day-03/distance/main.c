@@ -1,36 +1,37 @@
 #include <stdio.h>
 #include <string.h>
 
-// create a function which takes a char array as a parameter and
-// returns the distance between the first and last occurance of character 's'
-void occurance(char*, int);
+int occurance(char*, int);
 
 int main ()
 {
-    char str[] = "This is a sample string";
+    char str[] = "This is a sample strings";
     int size = sizeof(str)/sizeof(char);
     char *first, *last;
-    occurance(str, size);
+    //printf("%d\n", size);
+    int distance = occurance(str, size);
+    printf("%d", distance);
 
     return 0;
 }
 
-void occurance(char* sent, int size)
+int occurance(char* sent, int size)
 {
     int count_first = 0;
     int count_last = 0;
+
     for (int i = 0; i < size; i++){
-        while (sent[i] != 's'){
-            count_first++;
+        count_first++;
+        if (sent[i] == 's'){
+            break;
         }
     }
 
-    for (int i = size; i > 0; i--){
-        while (sent[i] != 's'){
-            count_last++;
+    for (int i = size-1; i >= 0; i--){
+        count_last++;
+        if (sent[i] == 's'){
+            break;
         }
     }
-
-    printf("%d\n", count_first);
-    printf("%d\n", count_last);
+    return size - count_first - (count_last-1);
 }
