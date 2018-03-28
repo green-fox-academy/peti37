@@ -5,10 +5,10 @@ int occurance(char*, int);
 
 int main ()
 {
-    char str[] = "This is a sample strings";
+    char str[] = "This is a sample string";
     int size = sizeof(str)/sizeof(char);
     char *first, *last;
-    //printf("%d\n", size);
+
     int distance = occurance(str, size);
     printf("%d", distance);
 
@@ -30,6 +30,7 @@ int occurance(char* sent, int size)
     for (int i = size-1; i >= 0; i--){
         count_last++;
         if (sent[i] == 's'){
+
             break;
         }
     }
