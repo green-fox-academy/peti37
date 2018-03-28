@@ -14,7 +14,7 @@ int main ()
     char* first_name;
     char* last_name;
     char* age;
-    char data_array[3][50];
+    char* data_array[3];
 
     printf("Give me your fullname and your age: ");
     gets(data);
@@ -24,6 +24,9 @@ int main ()
         data_array[i] = p;
         i++;
     }
+    first_name = data_array[0];
+    last_name = data_array[1];
+    age = data_array[2];
     printf("\nYour name is: %s %s and you are %s years old", first_name, last_name, age);
     return 0;
 }
