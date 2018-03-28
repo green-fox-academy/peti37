@@ -14,14 +14,14 @@ int main ()
     char* first_name;
     char* last_name;
     char* age;
-    char** data_array;
+    char data_array[3][50];
 
     printf("Give me your fullname and your age: ");
     gets(data);
     int i = 0;
     for (char *p = strtok(data, " "); p != NULL; p = strtok(NULL, " "))
     {
-        first_name = p;
+        data_array[i] = p;
         i++;
     }
     printf("\nYour name is: %s %s and you are %s years old", first_name, last_name, age);
