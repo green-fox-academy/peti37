@@ -18,8 +18,7 @@ int main()
 void separator(char* sentence)
 {
     char* word = strtok(sentence, " ");
-    while(word != NULL)
-    {
+    while(word != NULL) {
         printf("%s\n", word);
         word = strtok(NULL, " ");
     }
