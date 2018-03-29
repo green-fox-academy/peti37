@@ -8,6 +8,7 @@ int main()
     char am[] = "kuty";
     int size = sizeof(am);
     printf("%s", append_a(am, size));
+
     return 0;
 }
 
