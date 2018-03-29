@@ -27,6 +27,6 @@ int main ()
     first_name = data_array[0];
     last_name = data_array[1];
     age = data_array[2];
-    printf("\nYour name is: %s %s and you are %s years old", first_name, last_name, age);
+    printf("\nYour name is: %s %s and you are %s years old. Dirr! Magic!", first_name, last_name, age);
     return 0;
 }

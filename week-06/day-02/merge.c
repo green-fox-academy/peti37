@@ -25,17 +25,17 @@ int main()
         }
 
     printf("\n");
-
-    for (s = 0, p = 0; s < 10, p < 20; s++, p++)
+    int g = 0;
+    int x = 1;
+    for (s = 0; s < 10; s++)
     {
-        if (p % 2 == 0)
-        {
-            array3[p] = array[s];
-        }
-        else if (p % 2 == 1)
-        {
-            array3[p] = array2[s];
-        }
+        array3[g] = array[s];
+        array3[x] = array2[s];
+        g += 2;
+        x += 2;
+    }
+    for (p = 19; p >= 0; p--)
+    {
         printf("%d ", array3[p]);
     }
 
