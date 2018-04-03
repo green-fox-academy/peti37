@@ -1,19 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define PI 3.14
-
-float circle_area(float);
+#include "defines.h"
 
 int main()
 {
-
-    float area = circle_area(10);
-    printf("%.2f", area);
+    printf("Circle area is %.2f\n", circle_area(10));
+    printf("Circle circumference is %.2f\n", circumference_func(10));
     return 0;
-}
-
-float circle_area(float radius){
-    float area = 0;
-    area = radius * radius * PI;
-    return area;
 }
