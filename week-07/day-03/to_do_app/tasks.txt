@@ -1,5 +1,4 @@
 
-0. [ ] egy
-1. [ ] ketto
-2. [ ] harom
-0. [ ] negy
+
+
+3. [ ] egy
