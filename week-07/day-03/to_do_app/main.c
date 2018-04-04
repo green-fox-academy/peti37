@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 void info(void);
 void commands(void);
 void write_new_task(void);
 void delete_line(void);
+void read_all_tasks(void);
+void read_all_tasks2(void);
 void complete_task(void);
 int main()
 {
@@ -42,18 +46,17 @@ void commands(){
         write_new_task();
     }
     else if (command[1] == list[1] && command[0] == list[0]){
-        read_all_tasks();
-        printf("\n");
+        read_all_tasks2();
     }
     else if (command[1] == remove[1] && command[0] == remove[0]){
         delete_line();
         printf("\n");
-        read_all_tasks();
+        read_all_tasks2();
     }
     else if (command[1] == comp[1] && command[0] == comp[0]){
         complete_task();
         printf("\n");
-        read_all_tasks();
+        read_all_tasks2();
     }
     else{
         //system("@cls||clear");
@@ -150,3 +153,18 @@ void complete_task(void){
     remove("tasks_temp.txt");
 }
 
+void read_all_tasks2(void){
+    FILE *fptr;
+    fptr = fopen("tasks.txt", "r");
+    char single_line[150];
+    fread(single_line, 50, sizeof(fptr), fptr);
+    int number_lines = 0;
+    for (char *p = strtok(single_line, "\n"); p != NULL; p = strtok(NULL, "\n"))
+    {
+        printf("%d. %s", number_lines, p);
+        printf("\n");
+        number_lines++;
+    }
+
+    fclose(fptr);
+}
