@@ -3,6 +3,8 @@
 void info(void);
 void commands(void);
 void write_new_task(void);
+void delete_line(void);
+void complete_task(void);
 int main()
 {
     info();
@@ -29,6 +31,7 @@ void commands(){
     char add[2] = "-a";
     char list[2] = "-l";
     char remove[2] = "-r";
+    char comp[2] = "-c";
 
     char* command = (char*)malloc(2);
     gets(command);
@@ -45,6 +48,12 @@ void commands(){
     else if (command[1] == remove[1] && command[0] == remove[0]){
         delete_line();
         printf("\n");
+        read_all_tasks();
+    }
+    else if (command[1] == comp[1] && command[0] == comp[0]){
+        complete_task();
+        printf("\n");
+        read_all_tasks();
     }
     else{
         //system("@cls||clear");
@@ -108,7 +117,36 @@ void delete_line(void){
     fclose(fptr);
     fclose(fptr_temp);
     remove("tasks_temp.txt");
-
 }
 
+void complete_task(void){
+    int index;
+    FILE *fptr;
+    FILE *fptr_temp;
+    fptr = fopen("tasks.txt", "r");
+    fptr_temp = fopen("tasks_temp.txt", "w");
+    printf("Enter the index of the task:\n ");
+    scanf("%d", &index);
+    char single_line[150];
+    int counter = 0;
+    while(!feof(fptr)){
+        fgets(single_line, 150, fptr);
+        if  (index == counter){
+                single_line[1] = 'x';
+        }
+        fprintf(fptr_temp, "%s", single_line);
+        counter++;
+    }
+    fclose(fptr);
+    fclose(fptr_temp);
+    fptr = fopen("tasks.txt", "w");
+    fptr_temp = fopen("tasks_temp.txt", "r");
+    while(!feof(fptr_temp)){
+        fgets(single_line, 150, fptr_temp);
+        fprintf(fptr, "%s", single_line);
+    }
+    fclose(fptr);
+    fclose(fptr_temp);
+    remove("tasks_temp.txt");
+}
 
