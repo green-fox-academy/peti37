@@ -31,9 +31,24 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="../../../../../BB/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../../../BB/parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../../BB/parser.h" />
+		<Unit filename="../../../../../BB/printer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../../BB/printer.h" />
+		<Unit filename="../../../../../BB/rs232/rs232-linux.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../../BB/rs232/rs232-win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../../BB/rs232/rs232.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
