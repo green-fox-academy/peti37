@@ -10,5 +10,6 @@ int open_port();
 int close_port();
 int log_data();
 void filtered();
+void save_into_file();
 
 #endif // PARSER_H_INCLUDED

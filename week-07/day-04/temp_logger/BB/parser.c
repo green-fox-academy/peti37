@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <Windows.h>
 #include "rs232/rs232.h"
 #include "parser.h"
 #include "printer.h"
@@ -121,22 +122,62 @@ int log_data()
 	// Get a line of data from the port
 	// If there is no data on the port, then do nothing
 	char buff[PORT_BUFFER_LEN];
+	FILE *logger;
+	logger = fopen("full.txt", "w");
 	if (get_line_from_port(buff, PORT_BUFFER_LEN) > 0) {
 		// Put the data into the logfile
         //Printing the buffer
 		printf("%s\n",buff);
+		fputs(buff, logger);
 		strcat(content, "\n");
 		strcat(content, buff);
 	}
-
+    fclose(logger);
 	return 0;
 }
 void filtered(){
+    printf("\nFiltering");
+    Sleep(900);
+    printf(".");
+    Sleep(900);
+    printf(".");
+     Sleep(900);
+    printf(".\n\n");
+    Sleep(900);
+
     FILE *fptr;
     fptr = fopen("log.txt", "w");
     fprintf(fptr, content);
     fclose(fptr);
     fptr = fopen("log.txt", "r");
+    char* year, *month, *day, *hour, *minute, *sec, *temp;
+    char single_line[150], single_line_copy[150];
+    while(!feof(fptr)){
+        fgets(single_line, 150, fptr);
+        strcpy(single_line_copy, single_line);
+        year = strtok(single_line, ".: ");
+        month = strtok(NULL, ".: ");
+        day = strtok(NULL, ".: ");
+        hour = strtok(NULL, ".: ");
+        minute = strtok(NULL, ".: ");
+        sec = strtok(NULL, ".: ");
+        temp = strtok(NULL, ".: ");
+        if  (atoi(month) > 0 && atoi(month) < 13 && atoi(day) < 32 && atoi(day) > 0 && atoi(hour) < 25 && atoi(hour) >= 0 && atoi(minute) < 61 && atoi(minute) >= 0 && atoi(sec) >= 0 && atoi(sec) < 61 && strlen(temp) < 4){
+            printf("%s", single_line_copy);
+        }
+    }
+    fclose(fptr);
+    fptr = fopen("log.txt", "a+");
+    putc('\n', fptr);
+    fclose(fptr);
+    strcpy(content, "");
+    printf("\n\nPress 'f' to save the datas in a file.\n");
+}
+
+void save_into_file(){
+    FILE *fptr, *fptr_w;
+    fptr = fopen("log.txt", "r");
+    fptr_w = fopen("log_filtered.txt", "w");
     char* year, *month, *day, *hour, *minute, *sec, *temp;
     char single_line[150];
     char single_line2[150];
@@ -151,9 +192,33 @@ void filtered(){
         sec = strtok(NULL, ".: ");
         temp = strtok(NULL, ".: ");
         if  (atoi(month) > 0 && atoi(month) < 13 && atoi(day) < 32 && atoi(day) > 0 && atoi(hour) < 25 && atoi(hour) >= 0 && atoi(minute) < 61 && atoi(minute) >= 0 && atoi(sec) >= 0 && atoi(sec) < 61 && strlen(temp) < 4){
-            printf("%s", single_line2);
+            fprintf(fptr_w, single_line2);
         }
     }
+    int len;
+    fseek(fptr_w, 0, SEEK_END);
+    len = ftell(fptr_w);
+    if  (len == 0)
+        printf("\nCouldn't save the file, or the file is empty.\n");
+    else
+        printf("\nSaving was successful. Saved in \"log_filtered.txt.\"\n\nTo read press 'r'...\n");
     fclose(fptr);
-    strcpy(content, "");
+    fclose(fptr_w);
+}
+
+void read_file(){
+
+    FILE *fptr;
+    fptr = fopen("log_filtered.txt", "r");
+    char single_line[150];
+    while(!feof(fptr)){
+        fgets(single_line, 150, fptr);
+        printf("%s", single_line);
+        }
+    int len;
+    fseek(fptr, 0, SEEK_END);
+    len = ftell(fptr);
+    if  (len == 0)
+        printf("\nCouldn't read the file, or the file is empty.\n");
+    fclose(fptr);
 }

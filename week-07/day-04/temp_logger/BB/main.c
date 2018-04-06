@@ -29,6 +29,12 @@ int main()
 				break;
             case 'k':
                 filtered();
+                break;
+            case 'f':
+                save_into_file();
+				break;
+            case 'r':
+                read_file();
 				break;
 			case 's':
 				if (logging_is_running) {
