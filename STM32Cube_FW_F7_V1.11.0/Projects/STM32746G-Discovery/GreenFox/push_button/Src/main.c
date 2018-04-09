@@ -90,6 +90,7 @@ int main(void)
 
   //TODO:
   //Initialization the push button and the led with using BSP
+  BSP_LED_Init(LED_GREEN);
   
   //Turn the led on to validate the initialization is occured.
   
@@ -97,6 +98,7 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
+	  BSP_LED_On(LED_GREEN);
 	  //TODO:
 	  //Write a simple program witch flashes(toggle) the led when the button is pressed
   }
