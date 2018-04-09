@@ -1,0 +1,8 @@
+*/MDK-ARM
+*/EWARM
+*.txt
+*/SW4STM32/*/*
+!*.cproject
+!*.project
+!*.ld
+!*.s
