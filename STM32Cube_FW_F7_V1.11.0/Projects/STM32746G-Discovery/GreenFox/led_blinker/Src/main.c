@@ -99,7 +99,7 @@ int main(void)
 
   /* Add your application code here     */
   BSP_LED_Init(LED_GREEN);
-  BSP_PB_Init();
+  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
   //BSP_LED_On(LED_GREEN);
 
   /* Infinite loop */
@@ -133,26 +133,30 @@ int main(void)
 
   while (1)
   {
-	  led_lighter_on();
-	  HAL_Delay(500);
-	  led_lighter_off();
-	  HAL_Delay(500);
+	  if (BSP_PB_GetState(BUTTON_KEY))
+		  led_lighter_on();
+	  else
+		  led_lighter_off();
   }
 }
 
 static void led_lighter_on(){
 
+	GPIOA->ODR = GPIOA->ODR | 1;
+	//HAL_Delay(300);
 	for (int i = 8; i <= 10; i++){
 		GPIOF->ODR |= (1<<i);
-		GPIOA->ODR = GPIOA->ODR | 1;
+		//HAL_Delay(300);
 	}
 }
 
 static void led_lighter_off(){
 
+	GPIOA->ODR = GPIOA->ODR & 0xFFFFFFFE;
+	//HAL_Delay(300);
 	for (int i = 8; i <= 10; i++){
 		GPIOF->ODR &= ~(1<<i);
-		GPIOA->ODR = GPIOA->ODR & 0xFFFFFFFE;
+		//HAL_Delay(300);
 	}
 }
 
