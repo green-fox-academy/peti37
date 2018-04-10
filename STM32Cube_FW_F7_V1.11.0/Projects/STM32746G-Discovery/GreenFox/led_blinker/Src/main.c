@@ -39,6 +39,9 @@
 #include "main.h"
 
 GPIO_InitTypeDef gpio1;
+GPIO_InitTypeDef gpio2;
+GPIO_InitTypeDef gpio3;
+GPIO_InitTypeDef gpio4;
 
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
@@ -99,21 +102,46 @@ int main(void)
   /* Infinite loop */
 
   //gpioinit.Alternate = ;
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   gpio1.Mode = GPIO_MODE_OUTPUT_PP;
   gpio1.Pin = GPIO_PIN_0;
-  gpio1.Pull = GPIO_NOPULL;
-  gpio1.Speed = GPIO_SPEED_FREQ_HIGH;
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+  gpio1.Pull = GPIO_PULLDOWN;
+  gpio1.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(GPIOA, &gpio1);
+
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+   gpio2.Mode = GPIO_MODE_OUTPUT_PP;
+   gpio2.Pin = GPIO_PIN_8;
+   gpio2.Pull = GPIO_PULLDOWN;
+   gpio2.Speed = GPIO_SPEED_HIGH;
+   HAL_GPIO_Init(GPIOF, &gpio2);
+
+   gpio3.Mode = GPIO_MODE_OUTPUT_PP;
+   gpio3.Pin = GPIO_PIN_9;
+   gpio3.Pull = GPIO_PULLDOWN;
+   gpio3.Speed = GPIO_SPEED_HIGH;
+   HAL_GPIO_Init(GPIOF, &gpio3);
+
+   gpio4.Mode = GPIO_MODE_OUTPUT_PP;
+   gpio4.Pin = GPIO_PIN_10;
+   gpio4.Pull = GPIO_PULLDOWN;
+   gpio4.Speed = GPIO_SPEED_HIGH;
+   HAL_GPIO_Init(GPIOF, &gpio4);
 
   while (1)
   {
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-	  HAL_Delay(500);
+	  HAL_Delay(100);
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-	  BSP_LED_On(LED_GREEN);
-	  HAL_Delay(500);
-	  BSP_LED_Off(LED_GREEN);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_SET);
+	  HAL_Delay(100);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_RESET);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
+	  HAL_Delay(100);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET);
+	  HAL_Delay(100);
+	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_RESET);
   }
 }
 
