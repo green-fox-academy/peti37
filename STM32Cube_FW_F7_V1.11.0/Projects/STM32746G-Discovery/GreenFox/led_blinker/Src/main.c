@@ -38,7 +38,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-GPIO_InitTypeDef gpioinit;
+GPIO_InitTypeDef gpio1;
 
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
@@ -99,23 +99,21 @@ int main(void)
   /* Infinite loop */
 
   //gpioinit.Alternate = ;
-  gpioinit.Mode = GPIO_MODE_OUTPUT_PP;
-  gpioinit.Pin = GPIO_PIN_6;
-  gpioinit.Pull = GPIO_NOPULL;
-  gpioinit.Speed = GPIO_SPEED_FREQ_HIGH;
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  HAL_GPIO_Init(GPIOC, &gpioinit);
+  gpio1.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio1.Pin = GPIO_PIN_0;
+  gpio1.Pull = GPIO_NOPULL;
+  gpio1.Speed = GPIO_SPEED_FREQ_HIGH;
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  HAL_GPIO_Init(GPIOA, &gpio1);
 
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
 	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	  BSP_LED_On(LED_GREEN);
 	  HAL_Delay(500);
 	  BSP_LED_Off(LED_GREEN);
-	  //TODO:
-	  //Flash the ledwith 200 ms period time
   }
 }
 
