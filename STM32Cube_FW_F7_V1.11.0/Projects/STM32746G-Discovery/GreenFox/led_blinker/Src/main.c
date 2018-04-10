@@ -60,6 +60,8 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
+static void led_lighter_on(void);
+static void led_lighter_off(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -97,6 +99,7 @@ int main(void)
 
   /* Add your application code here     */
   BSP_LED_Init(LED_GREEN);
+  BSP_PB_Init();
   //BSP_LED_On(LED_GREEN);
 
   /* Infinite loop */
@@ -130,19 +133,27 @@ int main(void)
 
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-	  HAL_Delay(100);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_SET);
-	  HAL_Delay(100);
-	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
-	  HAL_Delay(100);
-	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET);
-	  HAL_Delay(100);
-	  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_RESET);
+	  led_lighter_on();
+	  HAL_Delay(500);
+	  led_lighter_off();
+	  HAL_Delay(500);
   }
+}
+
+static void led_lighter_on(){
+
+	for (int i = 8; i <= 10; i++){
+		GPIOF->ODR |= (1<<i);
+		GPIOA->ODR = GPIOA->ODR | 1;
+	}
+}
+
+static void led_lighter_off(){
+
+	for (int i = 8; i <= 10; i++){
+		GPIOF->ODR &= ~(1<<i);
+		GPIOA->ODR = GPIOA->ODR & 0xFFFFFFFE;
+	}
 }
 
 /**
