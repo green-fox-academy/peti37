@@ -63,8 +63,8 @@ static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 static void led_lighter_on(void);
 static void led_lighter_off(void);
-static void pushing();
-int counter;
+static void pushing(int*);
+
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -132,14 +132,14 @@ int main(void)
    gpio4.Pull = GPIO_PULLDOWN;
    gpio4.Speed = GPIO_SPEED_HIGH;
    HAL_GPIO_Init(GPIOF, &gpio4);
-
+   int counter = 0;
 
   while (1)
   {
 	  if (BSP_PB_GetState(BUTTON_KEY)){
 		  counter++;
 		  HAL_Delay(300);
-		  pushing();
+		  pushing(&counter);
 	  }
   }
 }
@@ -164,8 +164,8 @@ static void led_lighter_off(){
 	}
 }
 
-static void pushing(){
-	switch (counter){
+static void pushing(int* temp){
+	switch (*temp){
 	case 1: { GPIOA->ODR |= 1; }
 	break;
 	case 2: { GPIOF->ODR |= (1<<8); }
@@ -174,7 +174,7 @@ static void pushing(){
 	break;
 	case 4: { GPIOF->ODR |= (1<<10); }
 	break;
-	case 5: { led_lighter_off(); counter = 0; }
+	case 5: { led_lighter_off(); *temp = 0; }
 	break;
 	}
 }
