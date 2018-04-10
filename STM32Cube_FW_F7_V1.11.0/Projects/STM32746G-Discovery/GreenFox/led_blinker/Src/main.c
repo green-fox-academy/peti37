@@ -43,6 +43,7 @@ GPIO_InitTypeDef gpio2;
 GPIO_InitTypeDef gpio3;
 GPIO_InitTypeDef gpio4;
 
+
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
   */
@@ -62,7 +63,8 @@ static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 static void led_lighter_on(void);
 static void led_lighter_off(void);
-
+static void pushing();
+int counter;
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -131,18 +133,20 @@ int main(void)
    gpio4.Speed = GPIO_SPEED_HIGH;
    HAL_GPIO_Init(GPIOF, &gpio4);
 
+
   while (1)
   {
-	  if (BSP_PB_GetState(BUTTON_KEY))
-		  led_lighter_on();
-	  else
-		  led_lighter_off();
+	  if (BSP_PB_GetState(BUTTON_KEY)){
+		  counter++;
+		  HAL_Delay(300);
+		  pushing();
+	  }
   }
 }
 
 static void led_lighter_on(){
 
-	GPIOA->ODR = GPIOA->ODR | 1;
+	GPIOA->ODR |= 1;
 	//HAL_Delay(300);
 	for (int i = 8; i <= 10; i++){
 		GPIOF->ODR |= (1<<i);
@@ -152,11 +156,26 @@ static void led_lighter_on(){
 
 static void led_lighter_off(){
 
-	GPIOA->ODR = GPIOA->ODR & 0xFFFFFFFE;
+	GPIOA->ODR &= 0xFFFFFFFE;
 	//HAL_Delay(300);
 	for (int i = 8; i <= 10; i++){
 		GPIOF->ODR &= ~(1<<i);
 		//HAL_Delay(300);
+	}
+}
+
+static void pushing(){
+	switch (counter){
+	case 1: { GPIOA->ODR |= 1; }
+	break;
+	case 2: { GPIOF->ODR |= (1<<8); }
+	break;
+	case 3: { GPIOF->ODR |= (1<<9); }
+	break;
+	case 4: { GPIOF->ODR |= (1<<10); }
+	break;
+	case 5: { led_lighter_off(); counter = 0; }
+	break;
 	}
 }
 
