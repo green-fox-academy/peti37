@@ -168,11 +168,11 @@ static void pushing(int* temp){
 	switch (*temp){
 	case 1: { GPIOA->ODR |= 1; }
 	break;
-	case 2: { GPIOF->ODR |= (1<<8); }
+	case 2: { GPIOF->ODR |= (1<<8); GPIOA->ODR &= 0xFFFFFFFE;}
 	break;
-	case 3: { GPIOF->ODR |= (1<<9); }
+	case 3: { GPIOF->ODR |= (1<<9); GPIOF->ODR &= ~(1<<8);}
 	break;
-	case 4: { GPIOF->ODR |= (1<<10); }
+	case 4: { GPIOF->ODR |= (1<<10); GPIOF->ODR &= ~(1<<9);}
 	break;
 	case 5: { led_lighter_off(); *temp = 0; }
 	break;
