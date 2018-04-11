@@ -146,37 +146,46 @@ int main(void) {
 	//make the BSP_COM_Init() work in order to be able to use printf()
 	char receiver[3];
 
-	/*while (1) {
-		//printf("HMMMM!\n");
-		//HAL_Delay(1000);
+	while (1) {
+		strcpy(receiver, "   ");
 		HAL_UART_Receive(&uart_handle, &receiver, 3, 2000);
-		if (receiver[0] == 'o' && receiver[1] == 'n'){
+		if (!strcmp(receiver, "on ")){
 			BSP_LED_On(LED_GREEN);
 			printf("\nGreen led is: %s\n", receiver);
-			//HAL_Delay(500);
 		}
-		else if (receiver[0] == 'o' && receiver[1] == 'f'){
+		else if (!strcmp(receiver, "off")){
 			BSP_LED_Off(LED_GREEN);
 			printf("\nGreen led is: %s\n", receiver);
-			//HAL_Delay(500);
 		}
-		strcpy(receiver, "   ");
+		else if (strcmp(receiver, "on ") && strcmp(receiver, "off") && strcmp(receiver, "   ")){
+			printf("\nInvalid command\n");
+			for (int i = 0; i < 6; i++){
+				BSP_LED_On(LED_GREEN);
+				HAL_Delay(100);
+				BSP_LED_Off(LED_GREEN);
+				HAL_Delay(100);
+			}
+		}
 	}
-	*/
+	/*
 	char ch;
 	char* word;
-	word = (char*)calloc(20, sizeof(char));
+	word = (char*)calloc(30, sizeof(char));
 	int counter = 0;
 	while (1) {
-		HAL_UART_Receive(&uart_handle, &ch, 1, 2000);
+		HAL_UART_Receive(&uart_handle, &ch, 1, 5000);
 		printf("%c\n", ch);
 		word[counter] = ch;
 		counter++;
-		printf("%d\n", counter);
-		HAL_Delay(500);
-		if (ch == '\n')
+		//printf("%d\n", counter);
+		HAL_Delay(300);
+		if (ch == '\n'){
 			printf("%s\n", word);
+			strcpy(word, "");
+			free(word);
+		}
 	}
+	*/
 }
 
 /**
