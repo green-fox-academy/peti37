@@ -52,9 +52,11 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+RNG_HandleTypeDef RngHandle;
 
 volatile uint32_t timIntPeriod;
 
+__IO uint32_t aRandom32bit[8];
 /* Private function prototypes -----------------------------------------------*/
 
 #ifdef __GNUC__
@@ -83,7 +85,7 @@ int main(void) {
 	 These functions are provided as template implementation that User may integrate
 	 in his application, to enhance the performance in case of use of AXI interface
 	 with several masters. */
-
+	uint32_t counter = 0;
 	/* Configure the MPU attributes as Write Through */
 	MPU_Config();
 
@@ -102,23 +104,6 @@ int main(void) {
 	SystemClock_Config();
 
 
-/*
-	GPIO_InitTypeDef GPIOTxConfig;
-
-	GPIOTxConfig.Mode = GPIO_MODE_AF_PP;
-	GPIOTxConfig.Alternate = GPIO_AF8_USART6;
-
-	HAL_GPIO_Init(GPIOC, &GPIOTxConfig);
-
-	GPIO_InitTypeDef GPIORxConfig;
-
-	GPIORxConfig.Mode           = GPIO_MODE_AF_PP;
-	GPIORxConfig.Alternate      = GPIO_AF8_USART6;
-
-	HAL_GPIO_Init(GPIOC, &GPIORxConfig);
-	*/
-
-
 	uart_handle.Instance         = USART6;
 	uart_handle.Init.BaudRate    = 115200;
 	uart_handle.Init.WordLength  = UART_WORDLENGTH_8B;
@@ -131,12 +116,12 @@ int main(void) {
 
 
 
-	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_EXTI);
+	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
 
+	RngHandle.Instance = RNG;
 	/* Add your application code here
 	 */
 	BSP_LED_Init(LED_GREEN);
-	BSP_LED_Init(LED1);
 
 	BSP_COM_Init(COM1, &uart_handle);
 	
@@ -146,6 +131,25 @@ int main(void) {
 	//make the BSP_COM_Init() work in order to be able to use printf()
 	char receiver[3];
 
+	while (1){
+		 /*##-2- Wait until Wakeup button is pressed #################################*/
+		   /* while (BSP_PB_GetState(BUTTON_WAKEUP) != RESET)
+		    {
+		    }
+
+		    /*##-3- Loop while Wakeup button is maintained pressed ######################*/
+		    /*while (BSP_PB_GetState(BUTTON_WAKEUP) == RESET)
+		    {
+		    }*/
+		    for (counter = 0; counter < 8; counter++)
+		       {
+		         aRandom32bit[counter] = HAL_RNG_GetRandomNumber(&RngHandle);
+		         HAL_Delay(200);
+		         printf("%d\n", aRandom32bit[counter]);
+		       }
+
+	}
+/*
 	while (1) {
 		strcpy(receiver, "   ");
 		HAL_UART_Receive(&uart_handle, &receiver, 3, 2000);
@@ -159,7 +163,7 @@ int main(void) {
 		}
 		else if (strcmp(receiver, "on ") && strcmp(receiver, "off") && strcmp(receiver, "   ")){
 			printf("\nInvalid command\n");
-			for (int i = 0; i < 6; i++){
+			for (int i = 0; i < 3; i++){
 				BSP_LED_On(LED_GREEN);
 				HAL_Delay(100);
 				BSP_LED_Off(LED_GREEN);
@@ -167,6 +171,7 @@ int main(void) {
 			}
 		}
 	}
+	*/
 	/*
 	char ch;
 	char* word;
