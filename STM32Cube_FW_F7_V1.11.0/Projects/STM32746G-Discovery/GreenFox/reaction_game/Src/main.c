@@ -182,7 +182,7 @@ int main(void)
 				  ave_result += average[i];
 			  }
 			  ave_result /= 3;
-			  printf("Average of your results: %d\n", ave_result);
+			  printf("Average of your results: %dms\n\n\n", ave_result);
 			  ave_counter = 0;
 		  }
 		  HAL_Delay(500);
