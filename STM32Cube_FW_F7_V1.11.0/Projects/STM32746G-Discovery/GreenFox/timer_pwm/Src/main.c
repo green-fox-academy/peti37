@@ -45,6 +45,7 @@
 #define GREEN_OFF GPIOA, GPIO_PIN_15, GPIO_PIN_RESET
 #define WHITE_ON GPIOA, GPIO_PIN_8, GPIO_PIN_SET
 #define WHITE_OFF GPIOA, GPIO_PIN_8, GPIO_PIN_RESET
+#define PULSE1_VALUE       (uint32_t)(500/2)
 
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
@@ -59,12 +60,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+TIM_OC_InitTypeDef sConfig;
 GPIO_InitTypeDef gpio1;
-GPIO_InitTypeDef gpio2;
-GPIO_InitTypeDef gpio3;
 TIM_HandleTypeDef    TimHandle;
-TIM_HandleTypeDef    TimHandle2;
-TIM_HandleTypeDef    TimHandle3;
+
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -109,44 +108,16 @@ int main(void)
        - Low Level Initialization
      */
   HAL_Init();
-
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
   /* Add your application code here
      */
-  BSP_LED_Init(LED_GREEN);
-  __HAL_RCC_TIM2_CLK_ENABLE();
-  __HAL_RCC_TIM3_CLK_ENABLE();
-  __HAL_RCC_TIM4_CLK_ENABLE();
+
+  __HAL_RCC_TIM1_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  TimHandle.Instance               = TIM2;
-  TimHandle.Init.Period            = 1000;
-  TimHandle.Init.Prescaler         = 54000;
-  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
 
-  TimHandle2.Instance               = TIM3;
-  TimHandle2.Init.Period            = 1000;
-  TimHandle2.Init.Prescaler         = 54000;
-  TimHandle2.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-  TimHandle2.Init.CounterMode       = TIM_COUNTERMODE_UP;
-
-  TimHandle3.Instance               = TIM4;
-  TimHandle3.Init.Period            = 1000;
-  TimHandle3.Init.Prescaler         = 54000;
-  TimHandle3.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-  TimHandle3.Init.CounterMode       = TIM_COUNTERMODE_UP;
-
-  HAL_TIM_Base_Init(&TimHandle);            //Configure the timer
-  HAL_TIM_Base_Init(&TimHandle2);
-  HAL_TIM_Base_Init(&TimHandle3);
-
-  HAL_TIM_Base_Start(&TimHandle);
-  HAL_TIM_Base_Start(&TimHandle2);
-  HAL_TIM_Base_Start(&TimHandle3);
 
 
   uart_handle.Init.BaudRate   = 115200;
@@ -157,24 +128,48 @@ int main(void)
   uart_handle.Init.Mode       = UART_MODE_TX_RX;
   BSP_COM_Init(COM1, &uart_handle);
 
+  gpio1.Alternate = GPIO_AF1_TIM1;
   gpio1.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio1.Pin = GPIO_PIN_15;
-  gpio1.Pull = GPIO_PULLDOWN;
+  gpio1.Pin = GPIO_PIN_8;
+  gpio1.Pull = GPIO_NOPULL;
   gpio1.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(GPIOA, &gpio1);
 
-  gpio2.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio2.Pin = GPIO_PIN_8;
-  gpio2.Pull = GPIO_PULLDOWN;
-  gpio2.Speed = GPIO_SPEED_HIGH;
-  HAL_GPIO_Init(GPIOA, &gpio2);
+  	TimHandle.Instance = TIM1;
+	TimHandle.Init.Prescaler         = 54000;
+	TimHandle.Init.Period            = 1000;
+	TimHandle.Init.ClockDivision     = 0;
+	TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+	TimHandle.Init.RepetitionCounter = 0;
+	TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	if (HAL_TIM_PWM_Init(&TimHandle) != HAL_OK)
+	{
+	/* Initialization Error */
+		Error_Handler();
+	}
 
-  gpio3.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio3.Pin = GPIO_PIN_15;
-  gpio3.Pull = GPIO_PULLDOWN;
-  gpio3.Speed = GPIO_SPEED_HIGH;
-  HAL_GPIO_Init(GPIOB, &gpio3);
+	/*##-2- Configure the PWM channels #########################################*/
+	/* Common configuration for all channels */
+	sConfig.OCMode       = TIM_OCMODE_PWM1;
+	sConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
+	sConfig.OCFastMode   = TIM_OCFAST_DISABLE;
+	sConfig.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
+	sConfig.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+	sConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
 
+	/* Set the pulse value for channel 1 */
+	sConfig.Pulse = 500;
+	if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1) != HAL_OK)
+	{
+	/* Configuration Error */
+		Error_Handler();
+	}
+	if (HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_1) != HAL_OK)
+	{
+		HAL_GPIO_WritePin(WHITE_ON);
+	/* PWM Generation Error */
+		Error_Handler();
+	}
   /* Output without printf, using HAL function*/
   //char msg[] = "UART HAL Example\r\n";
   //HAL_UART_Transmit(&uart_handle, msg, strlen(msg), 100);
@@ -185,21 +180,8 @@ int main(void)
 
 	  while (1)
 	  {
-		  if (TIM2-> CNT > 666){
-			  HAL_GPIO_WritePin(GREEN_OFF);
-			  HAL_GPIO_WritePin(WHITE_OFF);
-			  HAL_GPIO_WritePin(RED_ON);
-		  }
-		  else if (TIM2-> CNT < 333){
-			  HAL_GPIO_WritePin(GREEN_OFF);
-			  HAL_GPIO_WritePin(WHITE_ON);
-			  HAL_GPIO_WritePin(RED_ON);
-			  }
-		  else {
-			  HAL_GPIO_WritePin(GREEN_ON);
-			  HAL_GPIO_WritePin(WHITE_OFF);
-			  HAL_GPIO_WritePin(RED_OFF);
-				  }
+		  printf("%d\n", TIM1->CNT);
+		  HAL_Delay(100);
 	  }
 }
 
@@ -217,6 +199,14 @@ PUTCHAR_PROTOTYPE
   return ch;
 }
 
+static void Error_Handler(void)
+{
+  /* Turn the red LED on */
+  while (1)
+  HAL_GPIO_WritePin(WHITE_ON);
+  {
+  }
+}
 /**
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow : 
@@ -268,8 +258,8 @@ static void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;  
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV8;
   if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
   {
     Error_Handler();
@@ -281,13 +271,6 @@ static void SystemClock_Config(void)
   * @param  None
   * @retval None
   */
-static void Error_Handler(void)
-{
-  /* User may add here some code to deal with this error */
-  while(1)
-  {
-  }
-}
 
 /**
   * @brief  Configure the MPU attributes as Write Through for SRAM1/2.
