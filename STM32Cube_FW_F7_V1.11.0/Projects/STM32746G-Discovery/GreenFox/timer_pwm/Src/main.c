@@ -129,15 +129,15 @@ int main(void)
   BSP_COM_Init(COM1, &uart_handle);
 
   gpio1.Alternate = GPIO_AF1_TIM1;
-  gpio1.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio1.Mode = GPIO_MODE_AF_PP;
   gpio1.Pin = GPIO_PIN_8;
   gpio1.Pull = GPIO_NOPULL;
   gpio1.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(GPIOA, &gpio1);
 
   	TimHandle.Instance = TIM1;
-	TimHandle.Init.Prescaler         = 54000;
-	TimHandle.Init.Period            = 1000;
+	TimHandle.Init.Prescaler         = 1;
+	TimHandle.Init.Period            = 800;
 	TimHandle.Init.ClockDivision     = 0;
 	TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
 	TimHandle.Init.RepetitionCounter = 0;
@@ -158,7 +158,7 @@ int main(void)
 	sConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
 
 	/* Set the pulse value for channel 1 */
-	sConfig.Pulse = 500;
+	sConfig.Pulse = 200;
 	if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1) != HAL_OK)
 	{
 	/* Configuration Error */
@@ -177,11 +177,17 @@ int main(void)
   /* Output a message using printf function */
   printf("\n-----------------WELCOME-----------------\r\n");
   printf("**********in STATIC timer & pwm WS**********\r\n\n");
-
+  int i;
 	  while (1)
 	  {
-		  printf("%d\n", TIM1->CNT);
-		  HAL_Delay(100);
+		  for (i = 0; i <= 800; i++){
+			  TIM1 -> CCR1 = i;
+			  HAL_Delay(1);
+		  }
+		  for (i = 800; i > 0; i--){
+			  TIM1 -> CCR1 = i;
+			  HAL_Delay(1);
+		  }
 	  }
 }
 
