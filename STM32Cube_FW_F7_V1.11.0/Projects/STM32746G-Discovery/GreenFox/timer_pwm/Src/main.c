@@ -63,6 +63,8 @@ GPIO_InitTypeDef gpio1;
 GPIO_InitTypeDef gpio2;
 GPIO_InitTypeDef gpio3;
 TIM_HandleTypeDef    TimHandle;
+TIM_HandleTypeDef    TimHandle2;
+TIM_HandleTypeDef    TimHandle3;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -115,6 +117,8 @@ int main(void)
      */
   BSP_LED_Init(LED_GREEN);
   __HAL_RCC_TIM2_CLK_ENABLE();
+  __HAL_RCC_TIM3_CLK_ENABLE();
+  __HAL_RCC_TIM4_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -124,9 +128,25 @@ int main(void)
   TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
   TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
 
+  TimHandle2.Instance               = TIM3;
+  TimHandle2.Init.Period            = 1000;
+  TimHandle2.Init.Prescaler         = 54000;
+  TimHandle2.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+  TimHandle2.Init.CounterMode       = TIM_COUNTERMODE_UP;
+
+  TimHandle3.Instance               = TIM4;
+  TimHandle3.Init.Period            = 1000;
+  TimHandle3.Init.Prescaler         = 54000;
+  TimHandle3.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+  TimHandle3.Init.CounterMode       = TIM_COUNTERMODE_UP;
+
   HAL_TIM_Base_Init(&TimHandle);            //Configure the timer
+  HAL_TIM_Base_Init(&TimHandle2);
+  HAL_TIM_Base_Init(&TimHandle3);
 
   HAL_TIM_Base_Start(&TimHandle);
+  HAL_TIM_Base_Start(&TimHandle2);
+  HAL_TIM_Base_Start(&TimHandle3);
 
 
   uart_handle.Init.BaudRate   = 115200;
@@ -137,24 +157,23 @@ int main(void)
   uart_handle.Init.Mode       = UART_MODE_TX_RX;
   BSP_COM_Init(COM1, &uart_handle);
 
-   gpio1.Alternate = GPIO_AF1_TIM2;
-   gpio1.Mode = GPIO_MODE_OUTPUT_PP;
-   gpio1.Pin = GPIO_PIN_15;
-   gpio1.Pull = GPIO_PULLDOWN;
-   gpio1.Speed = GPIO_SPEED_HIGH;
-   HAL_GPIO_Init(GPIOA, &gpio1);
+  gpio1.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio1.Pin = GPIO_PIN_15;
+  gpio1.Pull = GPIO_PULLDOWN;
+  gpio1.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOA, &gpio1);
 
-   gpio2.Mode = GPIO_MODE_OUTPUT_PP;
-   gpio2.Pin = GPIO_PIN_8;
-   gpio2.Pull = GPIO_PULLDOWN;
-   gpio2.Speed = GPIO_SPEED_HIGH;
-   HAL_GPIO_Init(GPIOA, &gpio2);
+  gpio2.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio2.Pin = GPIO_PIN_8;
+  gpio2.Pull = GPIO_PULLDOWN;
+  gpio2.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOA, &gpio2);
 
-   gpio3.Mode = GPIO_MODE_OUTPUT_PP;
-   gpio3.Pin = GPIO_PIN_15;
-   gpio3.Pull = GPIO_PULLDOWN;
-   gpio3.Speed = GPIO_SPEED_HIGH;
-   HAL_GPIO_Init(GPIOB, &gpio3);
+  gpio3.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio3.Pin = GPIO_PIN_15;
+  gpio3.Pull = GPIO_PULLDOWN;
+  gpio3.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOB, &gpio3);
 
   /* Output without printf, using HAL function*/
   //char msg[] = "UART HAL Example\r\n";
@@ -166,21 +185,20 @@ int main(void)
 
 	  while (1)
 	  {
-		  if (__HAL_TIM_GET_COUNTER(&TimHandle) > 666){
+		  if (TIM2-> CNT > 666){
 			  HAL_GPIO_WritePin(GREEN_OFF);
 			  HAL_GPIO_WritePin(WHITE_OFF);
 			  HAL_GPIO_WritePin(RED_ON);
 		  }
-
-		  else if (__HAL_TIM_GET_COUNTER(&TimHandle) < 333){
+		  else if (TIM2-> CNT < 333){
 			  HAL_GPIO_WritePin(GREEN_OFF);
 			  HAL_GPIO_WritePin(WHITE_ON);
 			  HAL_GPIO_WritePin(RED_ON);
 			  }
 		  else {
-				  HAL_GPIO_WritePin(GREEN_ON);
-				  HAL_GPIO_WritePin(WHITE_OFF);
-				  HAL_GPIO_WritePin(RED_OFF);
+			  HAL_GPIO_WritePin(GREEN_ON);
+			  HAL_GPIO_WritePin(WHITE_OFF);
+			  HAL_GPIO_WritePin(RED_OFF);
 				  }
 	  }
 }
