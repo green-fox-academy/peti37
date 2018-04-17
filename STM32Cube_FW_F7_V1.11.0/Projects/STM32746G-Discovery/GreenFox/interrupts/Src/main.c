@@ -51,9 +51,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-GPIO_InitTypeDef gpio1;
 UART_HandleTypeDef uart_handle;
+GPIO_InitTypeDef gpio1;
 GPIO_InitTypeDef conf;
+TIM_HandleTypeDef TimHandle;
 
 volatile uint32_t timIntPeriod;
 
@@ -102,6 +103,7 @@ int main(void) {
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOI_CLK_ENABLE();
+	__HAL_RCC_TIM2_CLK_ENABLE();
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
@@ -133,6 +135,24 @@ int main(void) {
 
 	BSP_COM_Init(COM1, &uart_handle);
 
+  	TimHandle.Instance = TIM2;
+	TimHandle.Init.Prescaler         = 54000;
+	TimHandle.Init.Period            = 500;
+	TimHandle.Init.ClockDivision     = 0;
+	TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+	TimHandle.Init.RepetitionCounter = 0;
+	TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+	/* assign the lowest priority to our interrupt line */
+	HAL_NVIC_SetPriority(TIM2_IRQn, 0x0F, 0x00);
+
+	/* tell the interrupt handling unit to process our interrupts */
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
+
+	HAL_TIM_Base_Init(&TimHandle);
+	HAL_TIM_Base_Start_IT(&TimHandle);
+
+
 
 	printf("\n**********WELCOME in interrupts WS**********\r\n\n");
 
@@ -144,6 +164,9 @@ int main(void) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	BSP_LED_Toggle(LED_GREEN);
 	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
+}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TimHandle){
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
 }
 /**
  * @brief  Retargets the C library printf function to the USART.
@@ -208,7 +231,7 @@ static void SystemClock_Config(void) {
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV8;
 	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK) {
 		Error_Handler();
 	}
