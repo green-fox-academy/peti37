@@ -55,6 +55,9 @@ UART_HandleTypeDef uart_handle;
 GPIO_InitTypeDef gpio1;
 GPIO_InitTypeDef conf;
 TIM_HandleTypeDef TimHandle;
+TIM_HandleTypeDef Timer2;
+TIM_OC_InitTypeDef sConfig;
+int counter = 0;
 
 volatile uint32_t timIntPeriod;
 
@@ -104,6 +107,7 @@ int main(void) {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOI_CLK_ENABLE();
 	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM3_CLK_ENABLE();
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
@@ -113,9 +117,9 @@ int main(void) {
 	conf.Mode = GPIO_MODE_IT_FALLING;
 	HAL_GPIO_Init(GPIOI, &conf);
 
-	//gpio1.Alternate = GPIO_AF1_TIM1;
-	gpio1.Mode = GPIO_MODE_OUTPUT_PP;
-	gpio1.Pin = GPIO_PIN_8;
+	gpio1.Alternate = GPIO_AF1_TIM2;
+	gpio1.Mode = GPIO_MODE_AF_PP;
+	gpio1.Pin = GPIO_PIN_15;
 	gpio1.Pull = GPIO_NOPULL;
 	gpio1.Speed = GPIO_SPEED_HIGH;
 	HAL_GPIO_Init(GPIOA, &gpio1);
@@ -136,37 +140,68 @@ int main(void) {
 	BSP_COM_Init(COM1, &uart_handle);
 
   	TimHandle.Instance = TIM2;
-	TimHandle.Init.Prescaler         = 54000;
-	TimHandle.Init.Period            = 500;
+	TimHandle.Init.Prescaler         = 1;
+	TimHandle.Init.Period            = 1000;
 	TimHandle.Init.ClockDivision     = 0;
 	TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
 	TimHandle.Init.RepetitionCounter = 0;
 	TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
+	Timer2.Instance = TIM3;
+	Timer2.Init.Prescaler         = 54000;
+	Timer2.Init.Period            = 10;
+	Timer2.Init.ClockDivision     = 0;
+	Timer2.Init.CounterMode       = TIM_COUNTERMODE_UP;
+	Timer2.Init.RepetitionCounter = 0;
+	Timer2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+	HAL_TIM_Base_Init(&Timer2);
+	HAL_TIM_Base_Start(&Timer2);
 	/* assign the lowest priority to our interrupt line */
 	HAL_NVIC_SetPriority(TIM2_IRQn, 0x0F, 0x00);
-
 	/* tell the interrupt handling unit to process our interrupts */
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
 	HAL_TIM_Base_Init(&TimHandle);
-	HAL_TIM_Base_Start_IT(&TimHandle);
+	HAL_TIM_Base_Start(&TimHandle);
 
-
+	sConfig.OCMode       = TIM_OCMODE_PWM1;
+	sConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
+	sConfig.OCFastMode   = TIM_OCFAST_DISABLE;
+	sConfig.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
+	sConfig.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+	sConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
+	sConfig.Pulse = 0;
+	HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_1);
 
 	printf("\n**********WELCOME in interrupts WS**********\r\n\n");
 
 
 	while (1) {
+		TIM2 -> CCR1 += counter;
+		HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1);
+		HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_1);
+		while (counter != 0)
+			{
+				TIM2 -> CCR1 = counter;
+				HAL_Delay(1);
+				if(counter > 650){
+					counter -= 2;
+				}else{
+					counter--;
+				}
+			}
 	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	BSP_LED_Toggle(LED_GREEN);
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
+	counter +=150;
+	printf("%d\n", counter);
 }
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TimHandle){
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
+void HAL_TIM_PulseFinishedCallback(TIM_HandleTypeDef *TimHandle){
+
 }
 /**
  * @brief  Retargets the C library printf function to the USART.
@@ -230,8 +265,8 @@ static void SystemClock_Config(void) {
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV8;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV16;
 	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK) {
 		Error_Handler();
 	}
