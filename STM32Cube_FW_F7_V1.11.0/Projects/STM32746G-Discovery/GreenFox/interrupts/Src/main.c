@@ -196,9 +196,7 @@ int main(void) {
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	BSP_LED_Toggle(LED_GREEN);
-	counter +=150;
-	printf("%d\n", counter);
+	counter += 150;
 }
 void HAL_TIM_PulseFinishedCallback(TIM_HandleTypeDef *TimHandle){
 
