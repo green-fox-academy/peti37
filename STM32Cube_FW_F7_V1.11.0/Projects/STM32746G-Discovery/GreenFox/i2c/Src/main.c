@@ -46,20 +46,19 @@
 /** @addtogroup Templates
  * @{
  */
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-
 UART_HandleTypeDef uart_handle;
-GPIO_InitTypeDef gpio1;
-GPIO_InitTypeDef conf;
 TIM_HandleTypeDef TimHandle;
-TIM_HandleTypeDef Timer2;
-TIM_OC_InitTypeDef sConfig;
-int counter = 0;
-char cmd;
+GPIO_InitTypeDef GPIOxConfig;
+I2C_HandleTypeDef I2cHandle;
+
 volatile uint32_t timIntPeriod;
+volatile uint8_t temp_buffer = 0;
+volatile uint8_t temp_reg = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -70,6 +69,7 @@ volatile uint32_t timIntPeriod;
 #else
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
+#define TEMP_LOG_ADDRESS (0b1001000 << 1)
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
@@ -103,27 +103,35 @@ int main(void) {
 	 - Low Level Initialization
 	 */
 	HAL_Init();
+	__HAL_RCC_I2C1_CLK_ENABLE()
+	;                          // enable the clock of the used peripheral
+	__HAL_RCC_GPIOB_CLK_ENABLE()
+	;
+	__HAL_RCC_TIM2_CLK_ENABLE()
+	;
 
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOI_CLK_ENABLE();
-	__HAL_RCC_TIM2_CLK_ENABLE();
-	__HAL_RCC_TIM3_CLK_ENABLE();
-	__HAL_RCC_USART1_CLK_ENABLE();
+	/*TimHandle.Instance = TIM2;
+	 TimHandle.Init.Period = 500;
+	 TimHandle.Init.Prescaler = 54000;
+	 TimHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	 TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	 HAL_TIM_Base_Init(&TimHandle);*/
+
+	GPIOxConfig.Pin = GPIO_PIN_9 | GPIO_PIN_8;
+	GPIOxConfig.Mode = GPIO_MODE_AF_OD;      //configure in pen drain mode
+	GPIOxConfig.Alternate = GPIO_AF4_I2C1;
+	GPIOxConfig.Pull = GPIO_PULLUP;
+
+	HAL_GPIO_Init(GPIOB, &GPIOxConfig);
+
+	I2cHandle.Instance = I2C1;
+	I2cHandle.Init.Timing = 0x40912732;
+	I2cHandle.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+
+	HAL_I2C_Init(&I2cHandle);
+
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
-
-	conf.Pin = GPIO_PIN_11;
-	conf.Pull = GPIO_NOPULL;
-	conf.Speed = GPIO_SPEED_FAST;
-	conf.Mode = GPIO_MODE_IT_FALLING;
-	HAL_GPIO_Init(GPIOI, &conf);
-
-	gpio1.Alternate = GPIO_AF1_TIM2;
-	gpio1.Mode = GPIO_MODE_AF_PP;
-	gpio1.Pin = GPIO_PIN_15;
-	gpio1.Pull = GPIO_NOPULL;
-	gpio1.Speed = GPIO_SPEED_HIGH;
-	HAL_GPIO_Init(GPIOA, &gpio1);
 
 	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_EXTI);
 
@@ -140,76 +148,55 @@ int main(void) {
 
 	BSP_COM_Init(COM1, &uart_handle);
 
-  	TimHandle.Instance = TIM2;
-	TimHandle.Init.Prescaler         = 1;
-	TimHandle.Init.Period            = 1000;
-	TimHandle.Init.ClockDivision     = 0;
-	TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
-	TimHandle.Init.RepetitionCounter = 0;
-	TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
-	Timer2.Instance = TIM3;
-	Timer2.Init.Prescaler         = 54000;
-	Timer2.Init.Period            = 1000;
-	Timer2.Init.ClockDivision     = 0;
-	Timer2.Init.CounterMode       = TIM_COUNTERMODE_UP;
-	Timer2.Init.RepetitionCounter = 0;
-	Timer2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
-	HAL_TIM_Base_Init(&Timer2);
-	HAL_TIM_Base_Start(&Timer2);
-	/* assign the lowest priority to our interrupt line */
-	HAL_NVIC_SetPriority(TIM3_IRQn, 0x0F, 0x00);
-	/* tell the interrupt handling unit to process our interrupts */
-	HAL_NVIC_EnableIRQ(TIM3_IRQn);
-
-	HAL_NVIC_SetPriority(USART1_IRQn, 0x0F, 0x00);
-	/* tell the interrupt handling unit to process our interrupts */
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-
-	HAL_TIM_Base_Init(&TimHandle);
-	HAL_TIM_Base_Start(&TimHandle);
-
-	sConfig.OCMode       = TIM_OCMODE_PWM1;
-	sConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
-	sConfig.OCFastMode   = TIM_OCFAST_DISABLE;
-	sConfig.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
-	sConfig.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-	sConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
-	sConfig.Pulse = 0;
-	HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_1);
-
 	printf("\n**********WELCOME in interrupts WS**********\r\n\n");
 
+	/* assign the lowest priority to our interrupt line */
 
+	HAL_NVIC_SetPriority(TIM2_IRQn, 0x0F, 0x00);
+	HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0x0F, 0x00);
+
+	/* tell the interrupt handling unit to process our interrupts */
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
+	HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+
+	HAL_TIM_Base_Start_IT(&TimHandle);
+
+
+
+	//HAL_I2C_Master_Transmit_IT(&I2cHandle, TEMP_LOG_ADDRESS, &temp_reg, 1);
+	//HAL_I2C_Master_Receive_IT(&I2cHandle, TEMP_LOG_ADDRESS, &temp_buffer, 1);
+
+	printf("\nProgram start...\n");
 	while (1) {
-		TIM2 -> CCR1 += counter;
-		HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1);
-		HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_1);
-		while (counter != 0)
-			{
-				TIM2 -> CCR1 = counter;
-				HAL_Delay(1);
-				if(counter > 650){
-					counter -= 2;
-				}else{
-					counter--;
-				}
-			}
+		/*HAL_I2C_Master_Transmit(&I2cHandle, TEMP_LOG_ADDRESS, &temp_reg, 1,
+				10);
+		/*HAL_I2C_Master_Receive(&I2cHandle, TEMP_LOG_ADDRESS, &temp_buffer, 1, 2000);
+		printf("%d\n", temp_buffer);*/
+		HAL_I2C_Master_Transmit_IT(&I2cHandle, TEMP_LOG_ADDRESS, &temp_reg, 1);
+		HAL_Delay(1000);
 	}
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	counter += 150;
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	HAL_I2C_Master_Receive_IT(&I2cHandle, TEMP_LOG_ADDRESS, (uint8_t*) &temp_buffer, 1);
 }
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TimHandle){
+
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	printf("%d °C\n", temp_buffer);
 
 }
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handle){
-	BSP_LED_On(LED_GREEN);
-	HAL_UART_Receive_IT(&uart_handle, cmd, 1);
+
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	BSP_LED_Toggle(LED_GREEN);
 }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *timhandle) {
+	BSP_LED_Toggle(LED_GREEN);
+}
+
 /**
  * @brief  Retargets the C library printf function to the USART.
  * @param  None
@@ -272,8 +259,8 @@ static void SystemClock_Config(void) {
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV16;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK) {
 		Error_Handler();
 	}

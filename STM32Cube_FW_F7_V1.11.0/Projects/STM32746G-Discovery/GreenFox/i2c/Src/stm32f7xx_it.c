@@ -44,12 +44,11 @@
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
   */
-
+extern I2C_HandleTypeDef I2cHandle;
 /** @addtogroup Templates
   * @{
   */
-extern TIM_HandleTypeDef TimHandle;
-extern UART_HandleTypeDef uart_handle;
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -158,20 +157,12 @@ void SysTick_Handler(void)
 {
   HAL_IncTick();
 }
+  
+void I2C1_EV_IRQHandler(void){
 
-void EXTI15_10_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+	HAL_I2C_EV_IRQHandler(&I2cHandle);
 }
 
-void TIM3_IRQHandler(void)
-{
-	HAL_TIM_IRQHandler(&TimHandle);
-}
-void USART1_IRQHandler(){
-
-	HAL_UART_IRQHandler(&uart_handle);
-}
 /******************************************************************************/
 /*                 STM32F7xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
