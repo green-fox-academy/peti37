@@ -26,6 +26,7 @@ int main()
     {
         printf("%d\n", (int)range(start, until, step)[i]);
     }
+    free(range(start, until, step));
     return 0;
 }
 
