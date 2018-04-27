@@ -60,8 +60,12 @@ TIM_HandleTypeDef Timer_PWM;
 TIM_IC_InitTypeDef IC_conf;
 TIM_OC_InitTypeDef sConfig;
 GPIO_InitTypeDef gpio_init_structure;
+GPIO_InitTypeDef gpioA0;
 GPIO_InitTypeDef gpio_IC_init;
 UART_HandleTypeDef uart_handle;
+GPIO_InitTypeDef gpioA0;
+ADC_HandleTypeDef adc_handle;
+ADC_ChannelConfTypeDef adc_channel;
 
 p_ctrler_t control;
 pi_ctrler_t control_pi;
@@ -73,6 +77,9 @@ char buff[100];
 volatile float freq_array[6] = {0};
 volatile float average_freq = 0;
 volatile int ave_counter = 0;
+volatile float adc_array[6] = {0};
+volatile float average_adc = 0;
+volatile int adc_counter = 0;
 
 
 
@@ -97,6 +104,7 @@ static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 float Hz();
 void print(void);
+static uint16_t ADC_Measure();
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -122,6 +130,8 @@ int main(void) {
 	TIM2_init();
 	IC_config();
 	gpioA15_init();
+	gpio_adc_init();
+	adc_handler();
 
 	HAL_NVIC_SetPriority(TIM2_IRQn, 0x0F, 0x00);
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
@@ -139,13 +149,13 @@ int main(void) {
 	control.out_min = 0;
 
 	pi_init(&control_pi);
-	control_pi.ref = 50;
 	control_pi.out_max = 100;
 	control_pi.out_min = 20;
 
 	while (1) {
 		print();
 		control.sense = average_freq / 5;
+		control_pi.ref = ADC_Measure();
 		control_pi.sense = average_freq / 5;
 		TIM3 -> CCR1 =(int) pi_control(&control_pi);
 		HAL_Delay(100);
@@ -185,32 +195,43 @@ float Hz()
 
 void print(void){
 
-	sprintf(buff, "%.3f Hz ", freq);
+	sprintf(buff, "%.0f Hz ", average_freq);
 	HAL_UART_Transmit(&uart_handle, (uint8_t *) &buff, 15, 0xFFFF);
 	BSP_LCD_ClearStringLine(0);
 	BSP_LCD_DisplayStringAtLine(0, (uint8_t *) buff);
 
-	sprintf(buff, "%d ", input_capture.last);
+	sprintf(buff, "PWM: %d ", TIM3 -> CCR1);
 	BSP_LCD_ClearStringLine(1);
 	BSP_LCD_DisplayStringAtLine(1, (uint8_t *) buff);
 
-	sprintf(buff, "%d ", input_capture.prev);
+	sprintf(buff, "OUT: %.2f ", pi_control(&control_pi));
 	BSP_LCD_ClearStringLine(2);
 	BSP_LCD_DisplayStringAtLine(2, (uint8_t *) buff);
 
-	sprintf(buff, "PWM: %d ", TIM3 -> CCR1);
+	sprintf(buff, "Reference: %d", ADC_Measure());
 	BSP_LCD_ClearStringLine(3);
 	BSP_LCD_DisplayStringAtLine(3, (uint8_t *) buff);
-
-	sprintf(buff, "OUT: %.2f ", p_control(&control));
-	BSP_LCD_ClearStringLine(4);
-	BSP_LCD_DisplayStringAtLine(4, (uint8_t *) buff);
-
-	sprintf(buff, "ave freq: %.0f Hz", average_freq);
-	BSP_LCD_ClearStringLine(5);
-	BSP_LCD_DisplayStringAtLine(5, (uint8_t *) buff);
 }
 
+static uint16_t ADC_Measure()
+{
+	HAL_ADC_Start(&adc_handle);
+	if (HAL_ADC_PollForConversion(&adc_handle, 10) == HAL_OK)
+	  {
+		adc_array[adc_counter] = HAL_ADC_GetValue(&adc_handle) / 40.95;
+		adc_counter++;
+		if (adc_counter == 7){
+			int sum = 0;
+			for(int i = 0; i < adc_counter -1; i++){
+					sum += adc_array[i];
+				}
+			average_adc = sum / (adc_counter -1);
+			adc_counter = 0;
+			}
+		return average_adc;
+	  }
+	return 1;
+}
 
 /**
  * @brief  System Clock Configuration

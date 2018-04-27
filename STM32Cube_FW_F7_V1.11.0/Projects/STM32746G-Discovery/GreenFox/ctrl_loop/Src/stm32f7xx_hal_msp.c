@@ -67,6 +67,9 @@ extern TIM_OC_InitTypeDef sConfig;
 extern GPIO_InitTypeDef gpio_init_structure;
 extern UART_HandleTypeDef uart_handle;
 extern GPIO_InitTypeDef gpio_IC_init;
+extern GPIO_InitTypeDef gpioA0;
+extern ADC_HandleTypeDef adc_handle;
+extern ADC_ChannelConfTypeDef adc_channel;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -123,6 +126,7 @@ void clock_enable_init(void)
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_USART1_CLK_ENABLE();
+	__HAL_RCC_ADC3_CLK_ENABLE();
 }
 
 void timer_pwm_init(void)
@@ -154,8 +158,41 @@ void gpio_pwm_init(void)
 	gpio_init_structure.Pin = GPIO_PIN_4;
 	gpio_init_structure.Pull = GPIO_NOPULL;
 	gpio_init_structure.Speed = GPIO_SPEED_HIGH;
+	HAL_GPIO_Init(GPIOB, &gpio_init_structure);
 
-		HAL_GPIO_Init(GPIOB, &gpio_init_structure);
+}
+
+void gpio_adc_init(void)
+{
+	gpioA0.Mode = GPIO_MODE_ANALOG;
+	gpioA0.Speed = GPIO_SPEED_FAST;
+	gpioA0.Pin = GPIO_PIN_0;
+	HAL_GPIO_Init(GPIOA, &gpioA0);
+}
+
+void adc_handler(void)
+{
+	adc_handle.Instance          		 = ADC3;
+	adc_handle.Init.ClockPrescaler        = ADC_CLOCKPRESCALER_PCLK_DIV4;
+	adc_handle.Init.Resolution            = ADC_RESOLUTION_12B;
+	adc_handle.Init.ScanConvMode          = DISABLE;                       // Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1)
+	adc_handle.Init.ContinuousConvMode    = DISABLE;                       // Continuous mode enabled to have continuous conversion
+	adc_handle.Init.DiscontinuousConvMode = DISABLE;                       // Parameter discarded because sequencer is disabled
+	adc_handle.Init.NbrOfDiscConversion   = 0;
+	adc_handle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE; // Conversion start trigged at each external event
+	adc_handle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_CC1;
+	adc_handle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;
+	adc_handle.Init.NbrOfConversion       = 1;
+	adc_handle.Init.DMAContinuousRequests = DISABLE;
+	adc_handle.Init.EOCSelection          = DISABLE;
+
+	HAL_ADC_Init(&adc_handle);
+
+	adc_channel.Channel      = ADC_CHANNEL_0;
+	adc_channel.Rank         = 1;
+	adc_channel.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+	adc_channel.Offset       = 0;
+	HAL_ADC_ConfigChannel(&adc_handle, &adc_channel);
 }
 
 void uart_init(void)
