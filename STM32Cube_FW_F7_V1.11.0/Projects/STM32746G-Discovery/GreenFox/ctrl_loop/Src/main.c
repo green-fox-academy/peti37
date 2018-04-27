@@ -70,7 +70,9 @@ volatile int counter = 0;
 volatile float T_period  = 0;
 volatile float freq = 0;
 char buff[100];
-
+volatile float freq_array[6] = {0};
+volatile float average_freq = 0;
+volatile int ave_counter = 0;
 
 
 
@@ -137,18 +139,14 @@ int main(void) {
 	control.out_min = 0;
 
 	pi_init(&control_pi);
-	control_pi.ref = 40;
+	control_pi.ref = 50;
 	control_pi.out_max = 100;
 	control_pi.out_min = 20;
 
 	while (1) {
-		if (counter == 2) {
-			T_period = (float)((input_capture.ovf * 65535 + input_capture.last - input_capture.prev) * 0.001);
-			freq = Hz();
-		}
 		print();
-		control.sense = freq / 5;
-		control_pi.sense = freq / 5;
+		control.sense = average_freq / 5;
+		control_pi.sense = average_freq / 5;
 		TIM3 -> CCR1 =(int) pi_control(&control_pi);
 		HAL_Delay(100);
 	}
@@ -156,23 +154,28 @@ int main(void) {
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
-	if (counter == 0){
-		input_capture.prev = HAL_TIM_ReadCapturedValue(htim,TIM_CHANNEL_1);
-		counter = 1;
-	} else if (counter == 1) {
-		input_capture.last = HAL_TIM_ReadCapturedValue(htim,TIM_CHANNEL_1);
-		counter = 2;
-	}
+	input_capture.prev = input_capture.last;
+	input_capture.last = HAL_TIM_ReadCapturedValue(htim,TIM_CHANNEL_1);
+	T_period = (float)((input_capture.ovf * 65535 + input_capture.last - input_capture.prev) * 0.001);
+	freq = Hz();
 
+	freq_array[ave_counter] = freq;
+	ave_counter++;
+
+	if (ave_counter == 7){
+		int sum = 0;
+		for(int i = 0; i < ave_counter -1; i++){
+				sum += freq_array[i];
+			}
+		average_freq = sum / (ave_counter -1);
+		ave_counter = 0;
+	}
+	input_capture.ovf = 0;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	input_capture.ovf++;
-	if (counter == 2){
-		input_capture.ovf = 0;
-		counter = 0;
-	}
 }
 
 float Hz()
@@ -181,6 +184,7 @@ float Hz()
 }
 
 void print(void){
+
 	sprintf(buff, "%.3f Hz ", freq);
 	HAL_UART_Transmit(&uart_handle, (uint8_t *) &buff, 15, 0xFFFF);
 	BSP_LCD_ClearStringLine(0);
@@ -202,7 +206,11 @@ void print(void){
 	BSP_LCD_ClearStringLine(4);
 	BSP_LCD_DisplayStringAtLine(4, (uint8_t *) buff);
 
+	sprintf(buff, "ave freq: %.0f Hz", average_freq);
+	BSP_LCD_ClearStringLine(5);
+	BSP_LCD_DisplayStringAtLine(5, (uint8_t *) buff);
 }
+
 
 /**
  * @brief  System Clock Configuration
