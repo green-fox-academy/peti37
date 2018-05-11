@@ -37,7 +37,17 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <string.h>
+#include "port_define.h"
+#include "mot_control.h"
+#include "servo_pwm.h"
+#include "URM.h"
+#include "adc.h"
+#include "GUI.h"
+#include "rgb.h"
+#include "multiplexer.h"
+#include "color_eval.h"
+#include "steering_logic.h"
+#include "aux_sensor.h"
 
 /** @addtogroup STM32F7xx_HAL_Examples
  * @{
@@ -49,17 +59,18 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define TIMEOUT_LINE_FOLLOWING 	1000
+#define TEST_CYCLE_TIME			200
+#define TIME_MAIN_DELAY			20
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
-RNG_HandleTypeDef RngHandle;
-GPIO_InitTypeDef D0_RX;
-GPIO_InitTypeDef D1_TX;
+extern Color_t sensor_line_evaluated_colors[9];
+extern Color_t line;
 
-volatile uint32_t timIntPeriod;
-
-__IO uint32_t aRandom32bit[8];
 /* Private function prototypes -----------------------------------------------*/
+void setspeed(uint16_t distance, int no_line);
+
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -69,29 +80,106 @@ __IO uint32_t aRandom32bit[8];
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
 
+/* Private functions ---------------------------------------------------------*/
+
+static void Init(void);
+static void UART_Init(void);
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
-/* Private functions ---------------------------------------------------------*/
+uint32_t time_line_following;
+int64_t time_loop;
+uint8_t no_line = 0;
+uint8_t signal = 1;
+uint8_t obstacle = 0;
+uint8_t test_cycle = 0;
+int8_t gen_speed = LOADED_SPEED;
 
 /**
- * @brief  Main program
- * @param  None
- * @retval None
- */
+  * brief  Main program
+  * param  None
+  * retval None
+  */
 int main(void) {
-	/* This project template calls firstly two functions in order to configure MPU feature
-	 and to enable the CPU Cache, respectively MPU_Config() and CPU_CACHE_Enable().
-	 These functions are provided as template implementation that User may integrate
-	 in his application, to enhance the performance in case of use of AXI interface
-	 with several masters. */
-	uint32_t counter = 0;
-	/* Configure the MPU attributes as Write Through */
+	Init();
+
+	printf("\n------------------WELCOME-----------------\r\n");
+	printf(  "********* in Serving Car project *********\r\n");
+	printf(  "***** KRYPTONITE team - Static class *****\r\n\n");
+
+	while(1) {
+
+//	// preparation for steering testing
+	circ_buf_init(&cbuf);
+
+
+	URM_Start();
+	play_welcome_screens();
+	HAL_GPIO_WritePin(SENSOR_LIGHTS, SET);
+
+	//BSP_LCD_DisplayOn();
+	BSP_LCD_Clear();
+
+	MC_control(40, FORWARD);
+
+	time_line_following = HAL_GetTick();
+
+	time_loop = HAL_GetTick();
+	HAL_Delay(300);
+		while (1) {
+			get_rgb_datas();
+
+			update_left_sensor_beer();
+//			printf("speed: %d\n", gen_speed);
+
+			if (!obstacle) {// line under the sensors and no obstacle in front
+				update_servo(&signal); // get color data and set servo
+			}
+
+			if (signal /*&& HAL_GetTick() > time_line_following + 100*/) {
+				time_line_following = HAL_GetTick();
+			}
+
+			if (HAL_GetTick() > time_line_following + TIMEOUT_LINE_FOLLOWING && !signal) {
+				MC_control(100, BREAK);
+				no_line = 1;
+				update_servo(&signal); // get color data and set servo
+			} else {
+				no_line = 0;
+			}
+
+			setspeed(URM_GetDistance(), no_line);
+
+			while (time_loop + TIME_MAIN_DELAY > HAL_GetTick()) {
+				//wait till TIME_MAIN_DELAY exceeds
+			}
+
+			time_loop = HAL_GetTick();
+
+			if (reached_start_sign()) {
+				MC_control(100, BREAK);
+				no_line = 0;
+				signal = 1;
+				break;
+			}
+		}
+	}
+
+}
+
+/**
+  * brief  All initialization at startup
+  * param  None
+  * retval None
+  */
+static void Init(void)
+{
+	// Configure the MPU attributes as Write Through
 	MPU_Config();
 
-	/* Enable the CPU Cache */
+	// Enable the CPU Cache
 	CPU_CACHE_Enable();
 
 	/* STM32F7xx HAL library initialization:
@@ -102,94 +190,103 @@ int main(void) {
 	 */
 	HAL_Init();
 
-	/* Configure the System clock to have a frequency of 216 MHz */
+	// Configure the System clock to have a frequency of 216 MHz
 	SystemClock_Config();
 
+	// Initialize UART communication port
+	UART_Init();
+	printf("UART init\n");
 
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	D0_RX.Alternate	= GPIO_AF8_USART6;
-	D0_RX.Mode		= GPIO_MODE_INPUT;
-	D0_RX.Pin		= GPIO_PIN_7;
-	D0_RX.Pull		= GPIO_PULLUP;
-	D0_RX.Speed		= GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOC, &D0_RX);
+	// Initialize Ultrasonic Ranging Module
+	URM_Init();
+	printf("URM init\n");
 
-	D1_TX.Alternate	= GPIO_AF8_USART6;
-	D1_TX.Mode		= GPIO_MODE_OUTPUT_PP;
-	D1_TX.Pin		= GPIO_PIN_6;
-	D1_TX.Pull		= GPIO_PULLUP;
-	D1_TX.Speed		= GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOC, &D1_TX);
+	// Initialize motor control
+	MC_Init();
+	printf("MC init\n");
 
-	uart_handle.Instance         = USART6;
-	uart_handle.Init.BaudRate    = 115200;
-	uart_handle.Init.WordLength  = UART_WORDLENGTH_8B;
-	uart_handle.Init.StopBits    = UART_STOPBITS_1;
-	uart_handle.Init.Parity      = UART_PARITY_NONE;
-	uart_handle.Init.HwFlowCtl   = UART_HWCONTROL_NONE;
-	uart_handle.Init.Mode        = UART_MODE_TX_RX;
+	// Initialize steering servo
+	servo_init();
+	printf("servo init\n");
 
-	HAL_UART_Init(&uart_handle);
+	// Initialize ADC for battery voltage control
+	ADC_Init();
+	printf("ADC init\n");
 
+	// Initialize colors for evaluating RGB data
+	init_colors();
 
+	// Initialize LCD and touch screen
+	GUI_Init();
+	printf("GUI init\n");
 
-	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
+	// Initialize RGB sensors
+	I2C_init();
+	setup_sensor_line();
+	//printf("RGB sensors init\n");
 
-	RngHandle.Instance = RNG;
-	/* Add your application code here
-	 */
-	BSP_LED_Init(LED_GREEN);
+	GPIO_RGB_Init();
+
+	aux_sensor_init();
+
+}
+
+/**
+  * brief  Initialize UART for communication
+  * param  None
+  * retval None
+  */
+static void UART_Init(void)
+{
+	uart_handle.Init.BaudRate = 115200;
+	uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+	uart_handle.Init.StopBits = UART_STOPBITS_1;
+	uart_handle.Init.Parity = UART_PARITY_NONE;
+	uart_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	uart_handle.Init.Mode = UART_MODE_TX_RX;
 
 	BSP_COM_Init(COM1, &uart_handle);
-	
+}
 
+void setspeed(uint16_t distance, int no_line)
+{
+		//		int min_speed = 5;				// PWM %
+		//		int max_speed = 15; 			// PWM %
+		//		int slow_distance = 150;		// cm
+		//		int approach_distance = 50;	// cm
+		//		int speed = 0;
+		int stop_distance = 30; 		// cm
 
-	//TODO:
-	//make the BSP_COM_Init() work in order to be able to use printf()
-	char receiver[3];
+		if (distance <= stop_distance) {
+			MC_control(100, BREAK);
+			obstacle = 1;
+			//screen_delivery();
+		} else {
+			obstacle = 0;
+			/*
+			speed = ((distance - approach_distance) * (max_speed - min_speed)) / (slow_distance - approach_distance) + min_speed;
+			if (speed > max_speed)
+				speed = max_speed;
+			else if (speed < min_speed)
+				speed = min_speed;
+			*/
+			if (!no_line)
+				MC_control(gen_speed, FORWARD);
+		}
+//	printf("obstacle: %d\n", obstacle);
+}
 
-	while (1) {
-        HAL_Delay(200);
-	    printf("igen\n");
-		strcpy(receiver, "   ");
-		HAL_UART_Receive(&uart_handle, &receiver, 3, 2000);
-		if (!strcmp(receiver, "on ")){
-			BSP_LED_On(LED_GREEN);
-			printf("\nGreen led is: %s\n", receiver);
-		}
-		else if (!strcmp(receiver, "off")){
-			BSP_LED_Off(LED_GREEN);
-			printf("\nGreen led is: %s\n", receiver);
-		}
-		else if (strcmp(receiver, "on ") && strcmp(receiver, "off") && strcmp(receiver, "   ")){
-			printf("\nInvalid command\n");
-			for (int i = 0; i < 3; i++){
-				BSP_LED_On(LED_GREEN);
-				HAL_Delay(100);
-				BSP_LED_Off(LED_GREEN);
-				HAL_Delay(100);
-			}
-		}
+int reached_start_sign()
+{
+	int start_signs = 0;
+	for (uint i = 0; i < 9; i++){
+		if (sensor_line_evaluated_colors[i] == WHITE)
+			start_signs++;
 	}
-	/*
-	char ch;
-	char* word;
-	word = (char*)calloc(30, sizeof(char));
-	int counter = 0;
-	while (1) {
-		HAL_UART_Receive(&uart_handle, &ch, 1, 5000);
-		printf("%c\n", ch);
-		word[counter] = ch;
-		counter++;
-		//printf("%d\n", counter);
-		HAL_Delay(300);
-		if (ch == '\n'){
-			printf("%s\n", word);
-			strcpy(word, "");
-			free(word);
-		}
-	}
-	*/
+	if (start_signs > 5)
+		return 1;
+	else
+		return 0;
 }
 
 /**

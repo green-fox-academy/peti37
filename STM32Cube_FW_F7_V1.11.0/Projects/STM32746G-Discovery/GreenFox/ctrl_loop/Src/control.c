@@ -2,8 +2,8 @@
 #include <stdio.h>
 
 #define DEFAULT_P			12
-#define DEFAULT_PI_P		3
-#define DEFAULT_PI_I		1
+#define DEFAULT_PI_P		1.5
+#define DEFAULT_PI_I		0.2
 
 void pi_init(pi_ctrler_t *ctrler)
 {

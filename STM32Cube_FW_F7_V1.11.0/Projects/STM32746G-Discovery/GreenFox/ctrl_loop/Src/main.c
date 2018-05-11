@@ -154,7 +154,6 @@ int main(void) {
 
 	while (1) {
 		print();
-		control.sense = average_freq / 5;
 		control_pi.ref = ADC_Measure();
 		control_pi.sense = average_freq / 5;
 		TIM3 -> CCR1 =(int) pi_control(&control_pi);
