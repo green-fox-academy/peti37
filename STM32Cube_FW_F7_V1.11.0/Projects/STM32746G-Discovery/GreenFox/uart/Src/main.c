@@ -107,18 +107,19 @@ int main(void) {
 
 
 	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_USART6_CLK_ENABLE();
 	D0_RX.Alternate	= GPIO_AF8_USART6;
-	D0_RX.Mode		= GPIO_MODE_INPUT;
+	D0_RX.Mode		= GPIO_MODE_OUTPUT_PP;
 	D0_RX.Pin		= GPIO_PIN_7;
 	D0_RX.Pull		= GPIO_PULLUP;
-	D0_RX.Speed		= GPIO_SPEED_FREQ_LOW;
+	D0_RX.Speed		= GPIO_SPEED_FAST;
 	HAL_GPIO_Init(GPIOC, &D0_RX);
 
 	D1_TX.Alternate	= GPIO_AF8_USART6;
 	D1_TX.Mode		= GPIO_MODE_OUTPUT_PP;
 	D1_TX.Pin		= GPIO_PIN_6;
 	D1_TX.Pull		= GPIO_PULLUP;
-	D1_TX.Speed		= GPIO_SPEED_FREQ_LOW;
+	D1_TX.Speed		= GPIO_SPEED_FAST;
 	HAL_GPIO_Init(GPIOC, &D1_TX);
 
 	uart_handle.Instance         = USART6;
@@ -132,7 +133,6 @@ int main(void) {
 	HAL_UART_Init(&uart_handle);
 
 
-
 	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
 
 	RngHandle.Instance = RNG;
@@ -140,7 +140,7 @@ int main(void) {
 	 */
 	BSP_LED_Init(LED_GREEN);
 
-	BSP_COM_Init(COM1, &uart_handle);
+	//BSP_COM_Init(COM1, &uart_handle);
 	
 
 
@@ -149,8 +149,9 @@ int main(void) {
 	char receiver[3];
 
 	while (1) {
+		HAL_UART_Transmit(&uart_handle, "asd\r\n", 4, 1000);
         HAL_Delay(200);
-	    printf("igen\n");
+	    printf("igen\r\n");
 		strcpy(receiver, "   ");
 		HAL_UART_Receive(&uart_handle, &receiver, 3, 2000);
 		if (!strcmp(receiver, "on ")){
