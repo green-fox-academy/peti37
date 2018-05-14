@@ -51,10 +51,9 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef uart_handle;
-RNG_HandleTypeDef RngHandle;
-GPIO_InitTypeDef D0_RX;
-GPIO_InitTypeDef D1_TX;
+UART_HandleTypeDef huart1;
+GPIO_InitTypeDef gpio_init;
+uint8_t receiver = 0;
 
 volatile uint32_t timIntPeriod;
 
@@ -108,70 +107,62 @@ int main(void) {
 
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	__HAL_RCC_USART6_CLK_ENABLE();
-	D0_RX.Alternate	= GPIO_AF8_USART6;
-	D0_RX.Mode		= GPIO_MODE_OUTPUT_PP;
-	D0_RX.Pin		= GPIO_PIN_7;
-	D0_RX.Pull		= GPIO_PULLUP;
-	D0_RX.Speed		= GPIO_SPEED_FAST;
-	HAL_GPIO_Init(GPIOC, &D0_RX);
+	gpio_init.Alternate	= GPIO_AF8_USART6;
+	gpio_init.Mode		= GPIO_MODE_AF_PP;
+	gpio_init.Pin		= GPIO_PIN_6;
+	gpio_init.Pull		= GPIO_PULLUP;
+	gpio_init.Speed		= GPIO_SPEED_FREQ_VERY_HIGH;
+	HAL_GPIO_Init(GPIOC, &gpio_init);
 
-	D1_TX.Alternate	= GPIO_AF8_USART6;
-	D1_TX.Mode		= GPIO_MODE_OUTPUT_PP;
-	D1_TX.Pin		= GPIO_PIN_6;
-	D1_TX.Pull		= GPIO_PULLUP;
-	D1_TX.Speed		= GPIO_SPEED_FAST;
-	HAL_GPIO_Init(GPIOC, &D1_TX);
+	gpio_init.Alternate	= GPIO_AF8_USART6;
+	gpio_init.Mode		= GPIO_MODE_AF_PP;
+	gpio_init.Pin		= GPIO_PIN_7;
+	gpio_init.Pull		= GPIO_PULLUP;
+	gpio_init.Speed		= GPIO_SPEED_FREQ_VERY_HIGH;
+	HAL_GPIO_Init(GPIOC, &gpio_init);
 
-	uart_handle.Instance         = USART6;
-	uart_handle.Init.BaudRate    = 115200;
-	uart_handle.Init.WordLength  = UART_WORDLENGTH_8B;
-	uart_handle.Init.StopBits    = UART_STOPBITS_1;
-	uart_handle.Init.Parity      = UART_PARITY_NONE;
-	uart_handle.Init.HwFlowCtl   = UART_HWCONTROL_NONE;
-	uart_handle.Init.Mode        = UART_MODE_TX_RX;
-
-	HAL_UART_Init(&uart_handle);
-
-
-	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
-
-	RngHandle.Instance = RNG;
-	/* Add your application code here
-	 */
+	huart1.Instance = USART6;
+	huart1.Init.BaudRate = 115200;
+	huart1.Init.WordLength = UART_WORDLENGTH_8B;
+	huart1.Init.StopBits = UART_STOPBITS_1;
+	huart1.Init.Parity = UART_PARITY_NONE;
+	huart1.Init.Mode = UART_MODE_TX_RX;
+	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+	HAL_UART_Init(&huart1);
 	BSP_LED_Init(LED_GREEN);
 
-	//BSP_COM_Init(COM1, &uart_handle);
-	
 
-
-	//TODO:
-	//make the BSP_COM_Init() work in order to be able to use printf()
-	char receiver[3];
-
+	uint8_t buffer[10] = "0";
+	int valami = 0;
+	HAL_NVIC_SetPriority(USART6_IRQn, 0x0F, 0x00);
+	HAL_NVIC_EnableIRQ(USART6_IRQn);
+	HAL_UART_Receive_IT(&huart1, &receiver, 1);
 	while (1) {
-		HAL_UART_Transmit(&uart_handle, "asd\r\n", 4, 1000);
-        HAL_Delay(200);
-	    printf("igen\r\n");
-		strcpy(receiver, "   ");
-		HAL_UART_Receive(&uart_handle, &receiver, 3, 2000);
-		if (!strcmp(receiver, "on ")){
-			BSP_LED_On(LED_GREEN);
-			printf("\nGreen led is: %s\n", receiver);
-		}
-		else if (!strcmp(receiver, "off")){
-			BSP_LED_Off(LED_GREEN);
-			printf("\nGreen led is: %s\n", receiver);
-		}
-		else if (strcmp(receiver, "on ") && strcmp(receiver, "off") && strcmp(receiver, "   ")){
-			printf("\nInvalid command\n");
-			for (int i = 0; i < 3; i++){
-				BSP_LED_On(LED_GREEN);
-				HAL_Delay(100);
-				BSP_LED_Off(LED_GREEN);
-				HAL_Delay(100);
-			}
-		}
+
+		sprintf(buffer, "%d\n", valami);
+		HAL_UART_Transmit(&huart1, &buffer, 10, 1000);
+		HAL_USART_Transmit(&huart1, &receiver, 1, 1000);
+		//HAL_USART_Transmit(&huart1, &buffer, 10, 1000);
+		//HAL_USART_Transmit(&huart1, &buffer, 5, 1000);
+		//HAL_Delay(1000);
+		valami++;
+		HAL_Delay(1000);
+
 	}
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	switch(receiver){
+			case '1':
+				BSP_LED_On(LED_GREEN);
+				break;
+			case '2':
+				BSP_LED_Off(LED_GREEN);
+				break;
+			}
+	HAL_UART_Receive_IT(&huart1, &receiver, 1);
+}
 	/*
 	char ch;
 	char* word;
@@ -191,7 +182,7 @@ int main(void) {
 		}
 	}
 	*/
-}
+
 
 /**
  * @brief  Retargets the C library printf function to the USART.
@@ -201,7 +192,7 @@ int main(void) {
 PUTCHAR_PROTOTYPE {
 	/* Place your implementation of fputc here */
 	/* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-	HAL_UART_Transmit(&uart_handle, (uint8_t *) &ch, 1, 0xFFFF);
+	HAL_UART_Transmit(&huart1, (uint8_t *) &ch, 1, 0xFFFF);
 
 	return ch;
 }

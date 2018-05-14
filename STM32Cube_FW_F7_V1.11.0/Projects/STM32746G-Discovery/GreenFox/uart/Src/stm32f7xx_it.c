@@ -41,6 +41,8 @@
 #include "stm32f7xx_it.h"
 #include "main.h"
 
+extern UART_HandleTypeDef huart1;
+
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
   */
@@ -157,7 +159,11 @@ void SysTick_Handler(void)
 {
   HAL_IncTick();
 }
-  
+
+void USART6_IRQHandler(void)
+{
+	HAL_UART_IRQHandler(&huart1);
+}
 
 /******************************************************************************/
 /*                 STM32F7xx Peripherals Interrupt Handlers                   */
