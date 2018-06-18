@@ -138,16 +138,18 @@ int main(void) {
 	HAL_NVIC_EnableIRQ(USART6_IRQn);
 	HAL_UART_Receive_IT(&huart1, &receiver, 1);
 	while (1) {
-
-		sprintf(buffer, "%d\n", valami);
-		HAL_UART_Transmit(&huart1, &buffer, 10, 1000);
-		HAL_USART_Transmit(&huart1, &receiver, 1, 1000);
-		//HAL_USART_Transmit(&huart1, &buffer, 10, 1000);
-		//HAL_USART_Transmit(&huart1, &buffer, 5, 1000);
-		//HAL_Delay(1000);
+//		for(int i = 0; i < 255; i++){
+//			printf("%d\n", i);
+//		}
+//		printf("255\n");
+//		printf("255\n");
+//		printf("100\n");
+		printf("r: 255\n");
+		printf("g: 255\n");
+		printf("b: 255\n");
+		printf("clean: %d\n", valami);
 		valami++;
-		HAL_Delay(1000);
-
+		HAL_Delay(100);
 	}
 }
 
@@ -160,7 +162,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			case '2':
 				BSP_LED_Off(LED_GREEN);
 				break;
+			case '3':
+				BSP_LED_Toggle(LED_GREEN);
+				break;
 			}
+	memset(&receiver, 0, sizeof(receiver));
 	HAL_UART_Receive_IT(&huart1, &receiver, 1);
 }
 	/*
