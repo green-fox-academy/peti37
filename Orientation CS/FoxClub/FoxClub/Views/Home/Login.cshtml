@@ -1,0 +1,14 @@
+﻿@model Fox
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Wellcome to Programmer Fox Club</h2>
+<p>Please provide a name, so you can associate it to your pet!</p>
+<form action="login" method="post">
+    <input type="text" placeholder="Name" name="name" value="" />
+    <input type="submit" value="GO!" />
+    <img src="https://static.planetminecraft.com/files/avatar/1601653_4.gif" alt="eevee" />
+</form>
+

@@ -1,0 +1,23 @@
+﻿@model List<Meme>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form action="/AddMeme" method="post">
+    Id<br />
+    <input type="number" name="Id" value="" /><br />
+    Name:<br />
+    <input type="text" name="Name" value="" /><br /><br />
+    Text:<br />
+    <input type="text" name="Text" value="" /><br /><br />
+    <input type="submit" value="Submit" class="submit" />
+</form>
+@foreach (var meme in Model)
+{
+    <h4>@meme.Id</h4>
+    <h4>@meme.Name</h4>
+    <h4>@meme.Text</h4>
+}
+
+

@@ -14,6 +14,7 @@ namespace _06_bunnies_again
             Console.WriteLine(BunnyEars(bunnies));
             Console.ReadLine();
         }
+
         public static int BunnyEars(int n)
         {
             

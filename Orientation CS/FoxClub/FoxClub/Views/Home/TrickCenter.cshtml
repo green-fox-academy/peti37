@@ -1,0 +1,28 @@
+﻿@model Fox
+@{
+    ViewData["Title"] = "TrickCenter";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>TrickCenter</h2>
+<table>
+    <tr>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>
+        <form action="GetTrick" method="post">
+            <p>Tricks</p>
+            <select name="trick" size=1>
+                @for (int i = 1; i < @Model.KnownTricks.Count; i++)
+            {
+                <option value="@Model.KnownTricks[i]">@Model.KnownTricks[i]</option>
+        }
+            </select>
+            <input type="submit" name="submittrick" value="Learn Trick">
+        </form>
+        </td>
+        <td><img src="https://thumbs.gfycat.com/BeautifulFatAlaskanmalamute-size_restricted.gif" alt="fox tricks" /></td>
+    </tr>
+</table>

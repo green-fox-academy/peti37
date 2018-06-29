@@ -10,20 +10,20 @@ namespace _05_Bunnies
     {
         static void Main(string[] args)
         {
-            int bunnies = 5;
+            int bunnies = 10;
             Console.WriteLine(BunnyEars(bunnies));
             Console.ReadLine();
         }
+
         public static int BunnyEars(int n)
         {
-            if (n == 1)
+            if (n == 0)
             {
-                return 1;
+                return 0;
             }
             else
-            {
-                BunnyEars(n - 1);
-                return n * 2;
+            { 
+                return BunnyEars(n - 1) + 2;
             }
         }
     }

@@ -11,21 +11,20 @@ namespace _01___Counter
         static void Main(string[] args)
         {
             int number = 50;
-            Console.WriteLine(counter(number));
+            counter(number);
             Console.ReadLine();
 
         }
         static int counter(int remaining)
         {
-            if (remaining <= 0)
+            if (remaining == 0)
             {
                 return 0;
             }
             else
             {
                 Console.WriteLine(remaining);
-                 return counter(remaining - 1);
-
+                return counter(remaining - 1);
             }
         }
     }

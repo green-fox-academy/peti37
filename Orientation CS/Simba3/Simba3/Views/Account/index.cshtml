@@ -1,0 +1,51 @@
+﻿@model List<BankAccount>
+@{
+    ViewData["Title"] = "index";
+    Layout = null;
+}
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        text-align: left;
+        padding: 8px;
+    }
+</style>
+<form action="/AddAccount" method="post">
+    <input type="text" placeholder="Name" name="Name" value="" /><br />
+    <input type="number" placeholder="Balance" name="Balance" value="" /><br />
+    <input type="text" placeholder="Animal Type" name="AnimalType" value="" /><br />
+    <input type="submit" name="submit" value="submit" /><br />
+    Is King?
+    <input checked="checked"
+           id="IsKing"
+           name="IsKing"
+           type="checkbox"
+           value="true" />
+    <input name="IsKing" type="hidden" value="false" />
+</form>
+<form action="/PlusCash" method="post">
+    <input type="number" placeholder="index" name="index" /><br />
+    <input type="submit" value="Add cash!" /><br />
+</form>
+
+<table>
+    <tr>
+        <th>i</th>
+        <th>King?</th>
+        <th>Name</th>
+        <th>Balance</th>
+        <th>Type</th>
+    </tr>
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        string borderStyle = Model[i].IsKing ? "4px darkorange dotted" : "1px solid #dddddd";
+        <tr><td>@i</td><td style="border: @borderStyle">@Model[i].IsKing</td><td>@Model[i].Name</td> <td>@Model[i].Balance.ToString("0.00")</td> <td>@Model[i].AnimalType</td></tr>
+    }
+
+</table>
+

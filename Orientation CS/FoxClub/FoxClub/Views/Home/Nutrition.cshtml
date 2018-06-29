@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewData["Title"] = "Nutrition Store";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Fox
+
+<h2>Nutrition</h2>
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 70%;
+    }
+
+    td, th {
+        text-align: left;
+        padding: 8px;
+    }
+</style>
+<table>
+    <tr>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>
+            <form action="GetFoodNDrink" method="post">
+                <p>Foods</p>
+                <select name="food" size=1>
+                    @for (int i = 0; i < @Model.Foods.Count; i++)
+                {
+                    <option value="@Model.Foods[i]">@Model.Foods[i]</option>
+            }
+                </select>
+                <br />
+                <br />
+                <p>Drinks</p>
+                <select name="drink" size=1>
+                    @for (int i = 0; i < @Model.Drinks.Count; i++)
+                {
+                    <option value="@Model.Drinks[i]">@Model.Drinks[i]</option>
+            }
+                </select><br />
+                <input type="submit" name="submit" value="Submitto">
+                <br />
+                <br />
+                <br />
+            </form>
+            <form action="AddFood" method="post">
+                <input type="text" placeholder="Food" name="food" value="" />
+                <input type="submit" name="submitfood" value="Add food " />
+            </form>
+            <form action="AddDrink" method="post">
+                <input type="text" placeholder="Drink" name="drink" value="" />
+                <input type="submit" name="submitdrink" value="Add drink" />
+            </form>
+        </td>
+        <td><img src="https://media.tenor.com/images/72ca71c082c03a2079be4224a351067a/tenor.gif" alt="Fox tricks" /></td>
+    </tr>
+</table>

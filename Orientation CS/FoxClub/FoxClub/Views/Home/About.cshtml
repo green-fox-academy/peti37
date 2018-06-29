@@ -1,0 +1,40 @@
+﻿@model Fox
+@{
+    ViewData["Title"] = "About";
+}
+<table>
+    <tr>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>
+            @if(Model.food == null)
+            {
+                <p>@Model.name currently hungry, you can buy food & drink at the Nutrition Market.</p>
+            }
+            else
+            {
+                <p>@Model.name currently living on @Model.food and @Model.drink.</p>
+            }
+                <br />
+                <br />
+            @if (!Model.Tricks.Any())
+            {
+                <p>@Model.name can't do any tricks, you can teach it at the Trick Center.</p>
+            }
+            else
+            {
+                <p>Also can do these tricks:</p>
+            }
+            <ul>
+                @for (int i = 0; i < @Model.Tricks.Count; i++)
+                {
+                    <li>@Model.Tricks[i]</li>
+                }
+            </ul>
+        </td>
+        <td><img src="@Model.Pictures[Model.Tricks.Count]" height="250" width="250" alt="fox tricks" /></td>
+    </tr>
+</table>
+

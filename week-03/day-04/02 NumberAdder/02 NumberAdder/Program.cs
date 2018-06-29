@@ -10,19 +10,22 @@ namespace _02_NumberAdder
     {
         static void Main(string[] args)
         {
-            int number = 135;
-            Console.WriteLine(adder(number));
-            Console.ReadLine();
+            Console.Write(numberAdder(5));
+            Console.Read();
         }
-        public static int adder(int n)
+
+        public static int numberAdder(int n)
         {
+            Console.Write(n);
             if (n == 1)
             {
-                return n;
+                Console.Write(" = ");
+                return 1;
             }
             else
             {
-                return n + adder(n - 1);
+                Console.Write(" + ");
+                return n + numberAdder(n - 1);
             }
         }
     }

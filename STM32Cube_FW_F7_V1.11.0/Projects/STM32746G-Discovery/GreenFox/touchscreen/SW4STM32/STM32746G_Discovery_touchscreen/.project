@@ -341,9 +341,24 @@
 			<locationURI>PARENT-1-PROJECT_LOC/syscalls.c</locationURI>
 		</link>
 		<link>
+			<name>Interrupts/User/diagnostic.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/diagnostic.c</locationURI>
+		</link>
+		<link>
 			<name>Interrupts/User/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/main.c</locationURI>
+		</link>
+		<link>
+			<name>Interrupts/User/settings.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/settings.c</locationURI>
+		</link>
+		<link>
+			<name>Interrupts/User/startscreen.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/startscreen.c</locationURI>
 		</link>
 		<link>
 			<name>Interrupts/User/stm32f7xx_hal_msp.c</name>
