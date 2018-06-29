@@ -11,6 +11,9 @@ namespace FoxClub.Controllers
     public class HomeController : Controller
     {
         static Fox fox = new Fox();
+        static List<string> log = new List<string>();
+        DateTime localDate = DateTime.Now;
+
         public IActionResult Index()
         {
             if (fox.name == null)
@@ -32,6 +35,7 @@ namespace FoxClub.Controllers
         public IActionResult GetName(string name)
         {
             fox.GetName(name);
+            log.Add($"{localDate.ToString()} - Logged in as {name}.");
             return RedirectToAction("index");
         }
 
@@ -49,6 +53,7 @@ namespace FoxClub.Controllers
         public IActionResult AddFood(string food)
         {
             fox.AddFood(food);
+            log.Add($"{localDate.ToString()} - Added {food} to the food-list.");
             return RedirectToAction("nutrition");
         }
 
@@ -56,6 +61,7 @@ namespace FoxClub.Controllers
         public IActionResult AddDrink(string drink)
         {
             fox.AddDrink(drink);
+            log.Add($"{localDate.ToString()} - Added {drink} to the food-list.");
             return RedirectToAction("nutrition");
         }
 
@@ -64,6 +70,7 @@ namespace FoxClub.Controllers
         {
             fox.drink = drink;
             fox.food = food;
+            log.Add($"{localDate.ToString()} - {fox.name} is now eating {food} and drinking {drink}");
             return RedirectToAction("about");
         }
 
@@ -86,8 +93,14 @@ namespace FoxClub.Controllers
         {
             fox.Tricks.Add(trick);
             fox.KnownTricks.Remove(trick);
+            log.Add($"{localDate.ToString()} - {fox.name} learnt a new trick:{trick}.");
             return RedirectToAction("trickcenter");
-            //return View(fox);
+        }
+
+        [HttpGet("history")]
+        public IActionResult History()
+        {
+            return View(log);
         }
 
         public IActionResult Error()

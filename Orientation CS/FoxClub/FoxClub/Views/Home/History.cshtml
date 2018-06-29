@@ -1,0 +1,14 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>History</h2>
+@foreach(var action in Model)
+{
+<ul>
+    <li>@action</li>
+</ul>
+}
+
